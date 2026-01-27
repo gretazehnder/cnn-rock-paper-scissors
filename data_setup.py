@@ -18,7 +18,7 @@ def extract_dataset():
     """
 
     if DATASET_DIR.exists():
-        print("Dataset already extracted. Skipping extraction.")
+        print("Dataset already extracted. Skipping extraction")
         return
 
     if not ZIP_PATH.exists():
@@ -27,7 +27,7 @@ def extract_dataset():
     with zipfile.ZipFile(ZIP_PATH, "r") as zip_ref:
         zip_ref.extractall(DATASET_DIR)
 
-    print("Dataset extracted successfully.")
+    print("Dataset extracted successfully")
 
 
 if __name__ == "__main__":

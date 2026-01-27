@@ -209,3 +209,18 @@ __marimo__/
 
 archive.zip
 dataset
+
+# tf/keras models
+*.keras
+*.h5
+
+# saved models/checkpoints
+models/**/model_*
+models/**/checkpoints/
+
+#latex build files
+*.aux
+*.fdb_latexmk
+*.fls
+*.out
+*.synctex.gz

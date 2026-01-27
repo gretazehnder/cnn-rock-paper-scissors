@@ -1,6 +1,6 @@
 \documentclass[12pt,a4paper]{article}
 
-%packages
+% packages
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
@@ -13,7 +13,7 @@
 
 \geometry{margin=2.5cm}
 
-%title
+% title
 \title{Rock, Paper, Scissors: CNN for Image Classification}
 \author{Greta Zehnder}
 \date{\today}
@@ -22,59 +22,64 @@
 
 \maketitle
 
-%abstract
+% abstract
 \begin{abstract}
-This project aims to develop Convolutional Neural Networks (CNNs) for the classification of images in a rps dataset ... multiple models are designed, trained, and evaluated to compare performance, generalization ...
+    This project aims to investigate the application of Convolutional Neural Networks (CNNs) to the task of image classification using a Rock-Paper-Scissors (RPS) dataset, with the objective of designing, training, and evaluating multiple deep learning models. 
+
+The experimental pipeline is composed of dataset exploration, data preprocessing (which includes train/validation/test splitting, input normalization, and data augmentation), followed by the development of three CNN models (ordered by increasing complexity), and their supervised training and performance evaluation. Finally, a generalization part is carried out to highlight the effectiveness of using CNNs for image classification tasks.
+
+The entire study was carried out in accordance with the official TensorFlow/Keras API documentation.
+
 \end{abstract}
 
-%introduction
+% introduction
 \section{Introduction}
-% what is a cnn etc.
 
-%dataset and EDA
-\section{Dataset and Exploratory Data Analysis}
-% dataset description + basic EDA
 
-%data preprocessing
-\section{Data preprocessing}
-% train/val/test split and data augmentation
+%-----------------------------------------------------------------
+\section{Data exploration and preprocessing}
 
-%methodology
-\section{Methodology}
-% strategy and work logic
+\subsection{Exploratory Data Analysis}
+% dataset description + EDA
 
-\subsection{CNN architectures}
-% overview of the different architectures
+\subsection{Preprocessing}
 
-\subsection{Training}
-% loss, optimizer, epochs, batch size, metrics
+\subsubsection{Train, validation and test splitting}
+% split strategy
 
-\subsection{Hyperparameter tuning}
-% what you tuned and how you selected the final setup
+\subsubsection{Normalization}
+% rescaling
 
-%CNN models
-\section{CNN models}
+\subsubsection{Data augmentation}
+% augmentation techniques
+
+%---------------------------------------------------------------------
+\section{CNN architecture and training}
 
 \subsection{Model A: baseline CNN}
-% description + motivation
+% simple architecture, no tuning
 
-\subsection{Model B: enhanced/intermediate CNN}
-% description + changes vs A
+\subsection{Model B: intermediate CNN}
+% increased complexity
 
 \subsection{Model C: final CNN}
-% final architecture MAYBE CHANGE THE NAME
+% best-performing model
 
-%experimental results
-\section{Experimental results}
+
+%--------------------------------------------------------------------
+\section{Evaluation and analysis}
+
+\subsection{Experimental Results}
 % quantitative results
 
-%model comparison and discussion ?MAYBE TOGETHER?
-\section{Model comparison}
-% table + main comparison points
+\subsection{Model Comparison}
+% table + metrics
 
-\section{Discussion}
-% interpret results, overfitting, limitations, etc
+\subsection{Discussion}
+% interpretation, overfitting, limits
 
+
+%----------------------------------------------------------
 %optional generalization test
 \section{Optional generalization test}
 
