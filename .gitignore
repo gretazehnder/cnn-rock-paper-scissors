@@ -215,8 +215,7 @@ dataset
 *.h5
 
 # saved models/checkpoints
-models/**/model_*
-models/**/checkpoints/
+models/model_a/model_a.keras
 
 #latex build files
 *.aux
