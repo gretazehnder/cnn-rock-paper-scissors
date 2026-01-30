@@ -4,6 +4,13 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+import sys
+from pathlib import Path
+
+# adding project root to python path
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+sys.path.append(str(PROJECT_ROOT))
+
 from preprocessing.data_pipeline import get_datasets, get_augmentation_layer, IMAGE_SIZE
 
 #project root directory

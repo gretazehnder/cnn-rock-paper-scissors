@@ -7,6 +7,8 @@ IMAGE_SIZE = (160, 160)
 BATCH_SIZE = 32
 SEED = 42
 
+# defining a fixed class order to keep label ids consistent everywhere
+CLASS_NAMES = ["paper", "rock", "scissors"]
 
 # defining project paths
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,19 +24,12 @@ def get_datasets():
         directory=TRAIN_DIR,
         labels="inferred", #default/could omit
         label_mode="int",  #default but better to keep
-        class_names=None, #default/could omit
+        class_names= CLASS_NAMES, #default/could omit
         color_mode="rgb", #default/could omit
         batch_size=BATCH_SIZE, #default but better to keep
         image_size=IMAGE_SIZE,
         shuffle=True, #default
         seed=SEED,
-        validation_split=None, #default/could omit
-        subset=None,#default/could omit
-        interpolation="bilinear", #default/could omit
-        follow_links=False, #default/could omit
-        crop_to_aspect_ratio=False, #default/could omit
-        pad_to_aspect_ratio=False, #default/could omit
-        data_format=None, #default/could omit
         verbose=True, #default/could omit
     )
 
@@ -43,19 +38,11 @@ def get_datasets():
         directory=VAL_DIR,
         labels="inferred",
         label_mode="int",
-        class_names=None,
+        class_names=CLASS_NAMES,
         color_mode="rgb",
         batch_size=BATCH_SIZE,
         image_size=IMAGE_SIZE,
         shuffle=False,
-        seed=None,
-        validation_split=None,
-        subset=None,
-        interpolation="bilinear",
-        follow_links=False,
-        crop_to_aspect_ratio=False,
-        pad_to_aspect_ratio=False,
-        data_format=None,
         verbose=True,
     )
 
@@ -64,19 +51,11 @@ def get_datasets():
         directory=TEST_DIR,
         labels="inferred",
         label_mode="int",
-        class_names=None,
+        class_names=CLASS_NAMES,
         color_mode="rgb",
         batch_size=BATCH_SIZE,
         image_size=IMAGE_SIZE,
         shuffle=False,
-        seed=None,
-        validation_split=None,
-        subset=None,
-        interpolation="bilinear",
-        follow_links=False,
-        crop_to_aspect_ratio=False,
-        pad_to_aspect_ratio=False,
-        data_format=None,
         verbose=True,
     )
 
@@ -110,8 +89,7 @@ def get_augmentation_layer():
             tf.keras.layers.RandomFlip("horizontal"),
             tf.keras.layers.RandomRotation(0.05),
             tf.keras.layers.RandomZoom(0.1),
-            tf.keras.layers.RandomBrightness(0.1),
-        ],
+            ],
         name="data_augmentation",
     )
 

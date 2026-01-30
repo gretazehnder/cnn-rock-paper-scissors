@@ -29,10 +29,16 @@ def list_images(folder: Path):
 def main():
     random.seed(SEED)
     
+    #deleting old split folder to avoid mixing files from previous runs
+    if DST_DIR.exists():
+        shutil.rmtree(DST_DIR)
+    
+    
     #creating the destination directory structure (train/val/test for each class)
     for split in ["train", "val", "test"]:
         for cls in CLASSES:
             (DST_DIR / split / cls).mkdir(parents=True, exist_ok=True)
+    
     
     #splitting and copying files for each class
     for cls in CLASSES:
