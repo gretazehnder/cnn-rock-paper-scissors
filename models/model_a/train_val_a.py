@@ -87,7 +87,7 @@ def build_model_a(augmentation_layer):
 
 #main function
 def main():
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    OUT_DIR.mkdir(parents=True, exist_ok=True) #in model b removed. maybe remove here too
     
     train_ds, val_ds, _ = get_datasets() #no test here
     aug = get_augmentation_layer()

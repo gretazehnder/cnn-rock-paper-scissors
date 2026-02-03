@@ -216,7 +216,7 @@ dataset
 
 # saved models/checkpoints
 models/model_a/model_a.keras
-
+models/model_b/model_b.keras
 #latex build files
 *.aux
 *.fdb_latexmk
