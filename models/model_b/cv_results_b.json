@@ -1,0 +1,98 @@
+[
+  {
+    "n_blocks": 3,
+    "base_filters": 32,
+    "learning_rate": 0.001,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.8926380276679993,
+    "best_val_loss": 0.5205143094062805
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 64,
+    "learning_rate": 0.0003,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.8466257452964783,
+    "best_val_loss": 0.6213853359222412
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 32,
+    "learning_rate": 0.0003,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.60429447889328,
+    "best_val_loss": 0.8481043577194214
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 64,
+    "learning_rate": 0.001,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.5368098020553589,
+    "best_val_loss": 1.0361597537994385
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 64,
+    "learning_rate": 0.0003,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.42331287264823914,
+    "best_val_loss": 1.055063247680664
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 64,
+    "learning_rate": 0.001,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.3527607321739197,
+    "best_val_loss": 1.0313645601272583
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 32,
+    "learning_rate": 0.001,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.34355828166007996,
+    "best_val_loss": 1.098022222518921
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 32,
+    "learning_rate": 0.0003,
+    "dense_units": 128,
+    "dropout_conv": 0.2,
+    "dropout_dense": 0.4,
+    "use_batchnorm": true,
+    "epochs": 15,
+    "best_val_acc": 0.33128833770751953,
+    "best_val_loss": 1.1005128622055054
+  }
+]

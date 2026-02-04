@@ -25,11 +25,11 @@ from preprocessing.data_pipeline import get_datasets
 BASE_DIR = Path(__file__).resolve().parents[3]
 
 #paths to model and evaluation folder
-MODEL_DIR = BASE_DIR / "models" / "model_a"
-EVAL_DIR = MODEL_DIR / "evaluation_a"
+MODEL_DIR = BASE_DIR / "models" / "model_b"
+EVAL_DIR = MODEL_DIR / "evaluation_b"
 
-MODEL_PATH = MODEL_DIR / "model_a.keras"
-HISTORY_PATH = MODEL_DIR / "history_a.json"
+MODEL_PATH = MODEL_DIR / "model_b.keras"
+HISTORY_PATH = MODEL_DIR / "history_b.json"
 
 
 #utility functions
@@ -46,8 +46,8 @@ def plot_history_from_json(history_path: Path, out_dir: Path): #plotting trainin
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
     plt.legend()
-    plt.title("Model A - accuracy")
-    plt.savefig(out_dir / "accuracy_a.png") #maybe check dpi for report
+    plt.title("Model B - accuracy")
+    plt.savefig(out_dir / "accuracy_b.png") #maybe check dpi for report
     plt.close()
 
     #loss plot
@@ -57,8 +57,8 @@ def plot_history_from_json(history_path: Path, out_dir: Path): #plotting trainin
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
     plt.legend()
-    plt.title("Model A - loss")
-    plt.savefig(out_dir / "loss_a.png") #maybe check dpi for report
+    plt.title("Model B - loss")
+    plt.savefig(out_dir / "loss_b.png") #maybe check dpi for report
     plt.close()
 
 def collect_predictions(model, dataset):
@@ -185,7 +185,7 @@ def main():
         y_true,
         y_pred,
         class_names,
-        EVAL_DIR / "confusion_matrix_val_a.png",
+        EVAL_DIR / "confusion_matrix_val_b.png",
     )
 
     #classification report (printed and saved)
@@ -198,7 +198,7 @@ def main():
     print("\nclassification report (validation):\n")
     print(report)
 
-    with open(EVAL_DIR / "classification_report_val_a.txt", "w") as f:
+    with open(EVAL_DIR / "classification_report_val_b.txt", "w") as f:
         f.write(report)
 
     #misclassified visualization
@@ -207,7 +207,7 @@ def main():
         y_true,
         y_pred,
         class_names,
-        EVAL_DIR / "misclassified_val_a.png",
+        EVAL_DIR / "misclassified_val_b.png",
     )
 
     #misclassified csv for report
@@ -215,7 +215,7 @@ def main():
         y_true,
         y_pred,
         class_names,
-        EVAL_DIR / "misclassified_val_a.csv",
+        EVAL_DIR / "misclassified_val_b.csv",
     )
 
     print(f"\nEvaluation artifacts saved in: {EVAL_DIR}")
