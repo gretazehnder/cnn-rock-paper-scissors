@@ -64,7 +64,7 @@ def build_model_b(
         if dropout_conv > 0:
             model.add(layers.Dropout(dropout_conv))
 
-        filters *= 2  #increasing depth each block
+        filters *= 2  #doubling filters for the next block
 
     model.add(layers.Flatten())
     model.add(layers.Dense(dense_units, activation="relu"))
@@ -196,7 +196,7 @@ def main():
     print(json.dumps(best, indent=2))
 
 
-    #training final model with best HP (same style as Model A)
+    #training final model with best hp (same style as model a)
     tf.keras.utils.set_random_seed(42)
 
     #'best' contains both tuned and fixed params now because we added them to 'row'
