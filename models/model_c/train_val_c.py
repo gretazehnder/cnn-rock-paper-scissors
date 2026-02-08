@@ -86,7 +86,7 @@ def build_model_c(
 
         filters *= 2 #doubling filters for the next block
 
-    x = layers.GlobalAveragePooling2D(name="gap")(x) #reducing feature maps with global average pooling instead of flatten
+    x = layers.Flatten(name="flatten")(x)
 
     x = layers.Dense(
         dense_units,
@@ -108,9 +108,9 @@ def build_model_c(
 def sample_config(rng: np.random.Generator, lr_min: float, lr_max: float) -> dict:
     #randomly sampling one configuration for model c
     cfg = {
-        "n_blocks": int(rng.choice([2, 3])),
+        "n_blocks": int(rng.choice([3, 4])),
         "base_filters": int(rng.choice([32, 64])),
-        "dense_units": int(rng.choice([64, 128])),
+        "dense_units": int(rng.choice([128, 256, 512])),
         "spatial_dropout": float(rng.choice([0.0, 0.10])),
         "dropout_head": float(rng.choice([0.3, 0.4, 0.5])),
         "l2_reg": float(rng.choice([0.0, 1e-4])),
