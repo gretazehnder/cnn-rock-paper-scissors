@@ -14,7 +14,7 @@ sys.path.append(str(PROJECT_ROOT))
 from preprocessing.data_pipeline import get_datasets, get_augmentation_layer, IMAGE_SIZE
 
 BASE_DIR = PROJECT_ROOT
-OUT_DIR = BASE_DIR / "models" / "model_x"
+OUT_DIR = BASE_DIR / "models" / "model_b"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 NUM_CLASSES = 3

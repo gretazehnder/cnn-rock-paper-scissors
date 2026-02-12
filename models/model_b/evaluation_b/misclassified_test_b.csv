@@ -1,0 +1,11 @@
+index,true_label,predicted_label
+9,paper,scissors
+53,paper,rock
+75,paper,rock
+76,paper,rock
+81,paper,rock
+85,paper,rock
+126,rock,paper
+147,rock,paper
+219,scissors,paper
+293,scissors,paper

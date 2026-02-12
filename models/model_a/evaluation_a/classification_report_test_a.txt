@@ -1,0 +1,9 @@
+              precision    recall  f1-score   support
+
+       paper     0.9612    0.9340    0.9474       106
+        rock     0.9720    0.9630    0.9674       108
+    scissors     0.9655    1.0000    0.9825       112
+
+    accuracy                         0.9663       326
+   macro avg     0.9662    0.9656    0.9658       326
+weighted avg     0.9662    0.9663    0.9661       326

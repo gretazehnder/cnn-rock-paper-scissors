@@ -45,9 +45,9 @@ def plot_history_from_json(history_path: Path, out_dir: Path): #plotting trainin
     plt.plot(history["val_accuracy"], label="Validation accuracy")
     plt.xlabel("Epoch")
     plt.ylabel("Accuracy")
-    plt.legend()
-    plt.title("Model B - accuracy")
-    plt.savefig(out_dir / "accuracy_b.png") #maybe check dpi for report
+    plt.legend(fontsize=15)
+    plt.title("Model B - accuracy", fontsize=20)
+    plt.savefig(out_dir / "accuracy_b.png") 
     plt.close()
 
     #loss plot
@@ -56,10 +56,9 @@ def plot_history_from_json(history_path: Path, out_dir: Path): #plotting trainin
     plt.plot(history["val_loss"], label="Validation loss")
     plt.xlabel("Epoch")
     plt.ylabel("Loss")
-    plt.legend()
-    plt.title("Model B - loss")
-    plt.savefig(out_dir / "loss_b.png") #maybe check dpi for report
-    plt.close()
+    plt.legend(fontsize=15)
+    plt.title("Model B - loss", fontsize=20)
+    plt.savefig(out_dir / "loss_b.png") 
 
 def collect_predictions(model, dataset):
     # lists to store true labels, predicted labels and images

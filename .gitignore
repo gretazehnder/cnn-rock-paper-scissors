@@ -214,10 +214,6 @@ dataset
 *.keras
 *.h5
 
-# saved models/checkpoints
-models/model_a/model_a.keras
-models/model_b/model_b.keras
-models/model_c/model_c.keras
 
 eda_images
 
@@ -227,5 +223,6 @@ eda_images
 *.fls
 *.out
 *.synctex.gz
+*.blg
 
-report-latex
+main.pdf

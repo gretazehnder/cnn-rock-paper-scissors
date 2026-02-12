@@ -1,0 +1,6 @@
+index,true_label,predicted_label
+9,paper,scissors
+76,paper,rock
+81,paper,rock
+85,paper,scissors
+100,paper,scissors
