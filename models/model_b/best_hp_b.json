@@ -2,11 +2,8 @@
   "n_blocks": 3,
   "base_filters": 32,
   "learning_rate": 0.001,
-  "dense_units": 128,
-  "dropout_conv": 0.2,
-  "dropout_dense": 0.4,
-  "use_batchnorm": true,
-  "epochs": 15,
-  "best_val_acc": 0.8926380276679993,
-  "best_val_loss": 0.5205143094062805
+  "dense_units": 256,
+  "epochs": 20,
+  "best_val_acc": 0.9815950989723206,
+  "best_val_loss": 0.04424513503909111
 }

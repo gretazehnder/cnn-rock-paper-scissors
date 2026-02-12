@@ -6,40 +6,29 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 import sys
-import gc
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-
 sys.path.append(str(PROJECT_ROOT))
 
 from preprocessing.data_pipeline import get_datasets, get_augmentation_layer, IMAGE_SIZE
 
 BASE_DIR = PROJECT_ROOT
-
 OUT_DIR = BASE_DIR / "models" / "model_c"
-
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 NUM_CLASSES = 3
 
 
-#saving hyperparameter tuning results (one row per configuration) to csv
 def save_results_csv(path: Path, rows: list[dict]) -> None:
-    #skipping saving if there are no rows
     if not rows:
         return
-    #opening csv file for writing
     with open(path, "w", newline="") as f:
-        #creating writer with consistent field order
         writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
-        #writing header row
         writer.writeheader()
-        #writing all rows
         writer.writerows(rows)
 
 
 def sample_loguniform(rng: np.random.Generator, low: float, high: float) -> float:
-    #sampling lr log-uniformly between low and high
     log_low, log_high = np.log10(low), np.log10(high)
     return float(10 ** rng.uniform(log_low, log_high))
 
@@ -54,21 +43,18 @@ def build_model_c(
     l2_reg: float,
     use_batchnorm: bool,
 ):
-    #building cnn using the functional api
     inputs = keras.Input(shape=(*IMAGE_SIZE, 3), name="input_image")
-
     x = augmentation_layer(inputs)
 
     filters = base_filters
     for b in range(n_blocks):
-
         x = layers.Conv2D(
             filters=filters,
             kernel_size=(3, 3),
             padding="same",
             use_bias=not use_batchnorm,
-            kernel_initializer="he_normal", #good for relu
-            kernel_regularizer=keras.regularizers.l2(l2_reg) if l2_reg > 0 else None, #penalizing large weights through optional l2 regularization
+            kernel_initializer="he_normal",
+            kernel_regularizer=keras.regularizers.l2(l2_reg) if l2_reg > 0 else None,
             name=f"conv_{b+1}",
         )(x)
 
@@ -76,15 +62,14 @@ def build_model_c(
             x = layers.BatchNormalization(name=f"bn_{b+1}")(x)
 
         x = layers.ReLU(name=f"relu_{b+1}")(x)
-        
-        #downsampling spatial resolution by factor 2
         x = layers.MaxPooling2D(pool_size=(2, 2), name=f"pool_{b+1}")(x)
 
-        #dropping entire feature maps for conv regularization if enabled
         if spatial_dropout > 0:
-            x = layers.SpatialDropout2D(spatial_dropout, name=f"spatial_dropout_{b+1}")(x) #spatial 2D version of dropout
+            x = layers.SpatialDropout2D(
+                spatial_dropout, name=f"spatial_dropout_{b+1}"
+            )(x)
 
-        filters *= 2 #doubling filters for the next block
+        filters *= 2
 
     x = layers.Flatten(name="flatten")(x)
 
@@ -106,48 +91,41 @@ def build_model_c(
 
 
 def sample_config(rng: np.random.Generator, lr_min: float, lr_max: float) -> dict:
-    #randomly sampling one configuration for model c
-    cfg = {
+    return {
         "n_blocks": int(rng.choice([3, 4])),
         "base_filters": int(rng.choice([32, 64])),
-        "dense_units": int(rng.choice([128, 256, 512])),
+        # keep only 256 and 512 (exclude 128)
+        "dense_units": int(rng.choice([256, 512])),
         "spatial_dropout": float(rng.choice([0.0, 0.10])),
         "dropout_head": float(rng.choice([0.3, 0.4, 0.5])),
         "l2_reg": float(rng.choice([0.0, 1e-4])),
         "learning_rate": sample_loguniform(rng, lr_min, lr_max),
         "use_batchnorm": True,
     }
-    return cfg
 
 
 def main():
-    EPOCHS = 15
+    EPOCHS = 25
     EARLY_STOP_PATIENCE = 3
     N_TRIALS = 12
     SEED = 42
 
-    #setting adam lr range for log-uniform sampling
     LR_MIN = 1e-5
     LR_MAX = 1e-3
 
     train_ds, val_ds, _ = get_datasets()
-    aug = get_augmentation_layer()
 
-    #creating rng for repeatable random search
     rng = np.random.default_rng(SEED)
-
     results = []
 
-    #running random search trials
     for t in range(N_TRIALS):
-
         keras.backend.clear_session()
-        gc.collect()
-
         tf.keras.utils.set_random_seed(SEED)
 
-        #sampling one hyperparameter configuration
         cfg = sample_config(rng, LR_MIN, LR_MAX)
+
+        # new augmentation instance per trial
+        aug = get_augmentation_layer()
 
         model = build_model_c(
             augmentation_layer=aug,
@@ -172,7 +150,6 @@ def main():
             restore_best_weights=True,
         )
 
-        #defining lr scheduler when validation loss plateaus
         reduce_lr = keras.callbacks.ReduceLROnPlateau(
             monitor="val_loss",
             factor=0.5,
@@ -180,7 +157,6 @@ def main():
             min_lr=1e-6,
             verbose=0,
         )
-
 
         history = model.fit(
             train_ds,
@@ -193,7 +169,6 @@ def main():
         best_val_acc = float(np.max(history.history["val_accuracy"]))
         best_val_loss = float(np.min(history.history["val_loss"]))
 
-        #logging and storing a single row with trial results and hyperparameters
         row = {
             "trial": t + 1,
             **cfg,
@@ -203,26 +178,19 @@ def main():
         }
         results.append(row)
 
-        
         print(
             f"[RS] trial {t+1}/{N_TRIALS} | "
             f"val_acc={best_val_acc:.4f} | val_loss={best_val_loss:.4f} | "
             f"lr={cfg['learning_rate']:.2e} | "
             f"blocks={cfg['n_blocks']} base={cfg['base_filters']} | "
             f"sd={cfg['spatial_dropout']} dh={cfg['dropout_head']}"
-            )
+        )
 
-        
-
-    #sorting 
     results_sorted = sorted(
-        results,
-        key=lambda r: (r["best_val_acc"], -r["best_val_loss"]),
-        reverse=True,
+        results, key=lambda r: (-r["best_val_acc"], r["best_val_loss"])
     )
     best = results_sorted[0]
 
-    #saving
     with open(OUT_DIR / "rs_results_c.json", "w") as f:
         json.dump(results_sorted, f, indent=2)
     save_results_csv(OUT_DIR / "rs_results_c.csv", results_sorted)
@@ -233,12 +201,13 @@ def main():
     print("\nbest configuration (best val_accuracy, tie-break val_loss):")
     print(json.dumps(best, indent=2))
 
-    #retraining final model using best hyperparameters
+    # retrain final model with best hyperparameters
     keras.backend.clear_session()
-    gc.collect()
     tf.keras.utils.set_random_seed(SEED)
 
-    #building final model with best config
+    # new augmentation instance for final model too
+    aug = get_augmentation_layer()
+
     model = build_model_c(
         augmentation_layer=aug,
         n_blocks=int(best["n_blocks"]),
@@ -280,11 +249,9 @@ def main():
         verbose=1,
     )
 
-    #saving training metrics history for later analysis and plotting
     with open(OUT_DIR / "history_c.json", "w") as f:
         json.dump(history.history, f, indent=2)
 
-    #saving model
     model.save(OUT_DIR / "model_c.keras")
 
     print("saved model, history, and random-search results in models/model_c/")

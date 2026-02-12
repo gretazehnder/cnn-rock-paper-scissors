@@ -1,0 +1,74 @@
+[
+  {
+    "n_blocks": 3,
+    "base_filters": 32,
+    "learning_rate": 0.001,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9815950989723206,
+    "best_val_loss": 0.04424513503909111
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 64,
+    "learning_rate": 0.0003,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9815950989723206,
+    "best_val_loss": 0.061919696629047394
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 32,
+    "learning_rate": 0.0003,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9785276055335999,
+    "best_val_loss": 0.05461827293038368
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 64,
+    "learning_rate": 0.001,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9754601120948792,
+    "best_val_loss": 0.06227225437760353
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 32,
+    "learning_rate": 0.001,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9754601120948792,
+    "best_val_loss": 0.07458366453647614
+  },
+  {
+    "n_blocks": 3,
+    "base_filters": 64,
+    "learning_rate": 0.0003,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9723926186561584,
+    "best_val_loss": 0.07633277028799057
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 32,
+    "learning_rate": 0.0003,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.9631901979446411,
+    "best_val_loss": 0.11575836688280106
+  },
+  {
+    "n_blocks": 2,
+    "base_filters": 64,
+    "learning_rate": 0.001,
+    "dense_units": 256,
+    "epochs": 20,
+    "best_val_acc": 0.953987717628479,
+    "best_val_loss": 0.11835590749979019
+  }
+]

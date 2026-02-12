@@ -206,7 +206,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 
-
+#dataset
 archive.zip
 dataset
 
@@ -219,9 +219,13 @@ models/model_a/model_a.keras
 models/model_b/model_b.keras
 models/model_c/model_c.keras
 
+eda_images
+
 #latex build files
 *.aux
 *.fdb_latexmk
 *.fls
 *.out
 *.synctex.gz
+
+report-latex

@@ -1,8 +1,16 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[11pt,a4paper]{article}
 
 % packages
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
+\usepackage{caption}
+\usepackage{xcolor}
+
+\captionsetup{
+    font={it,color=gray},
+    labelfont={it,color=gray}
+}
+
 \usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -10,6 +18,7 @@
 \usepackage{geometry}
 \usepackage{float}
 \usepackage{hyperref} % keep hyperref last
+
 
 \geometry{margin=2.5cm}
 
@@ -32,44 +41,276 @@ The entire study was carried out in accordance with the official TensorFlow/Kera
 
 \end{abstract}
 
+%table of contents
+
+\tableofcontents
+\newpage
+
 % introduction
 \section{Introduction}
 
+Convolutional Neural Networks are widely adopted in image classification tasks because they provide a flexible framework for learning visual patterns directly from image data while supporting different architectural and training choices.
+
+In this context, the development of a CNN can be seen as an exploratory process, in which progressively more complex modeling decisions are introduced and evaluated, moving from simple baseline architectures to manually tuned configurations and, eventually, to more systematic hyperparameter search strategies.
+Exploring these choices is therefore not only a means of improving performance, but also a way to better understand the sensitivity of a model to different design decisions and training conditions, and to observe how changes in architecture and optimization affect learning dynamics in practice.
+
+This exploratory process is computationally expensive, as training and evaluating multiple configurations requires significant time and resources, which naturally constrains the scope of experimentation and motivates a controlled and incremental evaluation under realistic computational limitations.
 
 %-----------------------------------------------------------------
 \section{Data exploration and preprocessing}
 
 \subsection{Exploratory Data Analysis}
-% dataset description + EDA
+The dataset used in this project consists of RGB images representing hand gestures corresponding to the three classes of the Rock-Paper-Scissors game, namely rock, paper, and scissors, and includes a total of 2188 images organized into class-specific subdirectories.
+The distribution of images across classes is relatively balanced, with 726 images belonging to the rock class, 712 to paper, and 750 to scissors, a property that is particularly relevant for supervised classification tasks, as it allows model performance across classes to be analyzed without strong bias effects.
+
+All images are stored in PNG format and were acquired under controlled conditions, with a uniform green background and consistent lighting and white balance, which limit environmental variability while still preserving meaningful differences in hand shape, orientation, and gesture configuration.
+An analysis of both absolute class frequencies and relative class proportions confirms the near-uniform representation of the three categories, while a visual inspection of randomly sampled images from each class highlights the presence of intra-class variability related to hand positioning and finger articulation.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.45\textwidth]{eda_images/class_distribution.png}
+    \hfill
+    \includegraphics[width=0.45\textwidth]{eda_images/class_proportions.png}
+    \caption{Class distribution (left) and class proportions (right) of the Rock-Paper-Scissors dataset.}
+    \label{fig:class_dist}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{eda_images/random_samples.png}
+    \caption{Randomly selected sample images from each class of the Rock-Paper-Scissors dataset.}
+    \label{fig:random_samples}
+\end{figure}
 
 \subsection{Preprocessing}
 
 \subsubsection{Train, validation and test splitting}
-% split strategy
+The dataset was split into training, validation, and test subsets prior to model training in order to enable both hyperparameter tuning and an unbiased final evaluation.
+The splitting procedure was applied independently to each class, using a fixed random seed to ensure reproducibility, with 15\% of the images assigned to the validation set, 15\% to the test set, and the remaining samples used for training.
+
+The resulting subsets were stored in a structured directory hierarchy with separate folders for each split and class, allowing a clear separation between training and evaluation data and ensuring compatibility with standard deep learning data-loading utilities.
 
 \subsubsection{Normalization}
-% rescaling
+Image normalization was applied as part of the data input pipeline by rescaling pixel intensities from the original $[0,255]$ range to $[0,1]$ using a dedicated \texttt{Rescaling(1./255)} layer provided by the TensorFlow/Keras API~\cite{tensorflow_rescaling}.  
+This normalization step was applied uniformly to the training, validation, and test datasets in order to ensure consistent input scaling across all phases of model development and evaluation, improving numerical stability during optimization.
+
+The datasets were constructed using the \texttt{image\_dataset\_from\_directory} utility~\cite{tensorflow_imagedataset,keras_imageloading}, and normalization was implemented through a mapping operation within the \texttt{tf.data} pipeline, leveraging parallel execution to improve performance~\cite{tensorflow_parallel_mapping}.  
+In addition, dataset caching and prefetching were employed to reduce input latency and optimize data throughput during both training and evaluation~\cite{tensorflow_caching_prefetching}.
+
+
 
 \subsubsection{Data augmentation}
-% augmentation techniques
+Data augmentation was introduced to improve robustness and reduce overfitting by exposing the model, during training, to realistic variations of the input images that preserve the underlying class label.  
+In this project, augmentation was implemented through Keras image preprocessing layers~\cite{keras_augmentation_layers}, following the standard workflow recommended in the official TensorFlow documentation~\cite{tensorflow_data_augmentation_examples}.
+
+A dedicated augmentation module was defined as a small preprocessing pipeline composed of random horizontal flipping, small random rotations, and random zoom transformations, which are particularly suitable for hand-gesture images because they mimic plausible changes in pose and framing without altering the semantic meaning of the gesture.  
+Crucially, these stochastic transformations were applied only to the training data, while validation and test sets were kept unmodified in order to ensure that evaluation metrics reflect performance on the original data distribution.
+
+Finally, the augmentation layers were designed to be integrated as part of the model architecture, so that they are active during training but automatically disabled at inference time, ensuring consistency between training and deployment behavior~\cite{tensorflow_augmentation_inside_model}.
 
 %---------------------------------------------------------------------
 \section{CNN architecture and training}
-
 \subsection{Model A: baseline CNN}
 
-\subsection{Model B: intermediate CNN}
+Model A is implemented as a baseline convolutional neural network using the Keras high-level API and the \texttt{Sequential} model paradigm, which allows layers to be stacked linearly in a clear and interpretable manner \cite{keras_models_overview,keras_sequential_model,keras_sequential_guide}.  
+The objective of this model is to establish a simple yet representative reference architecture for the Rock--Paper--Scissors image classification task, against which more advanced models can be systematically compared.
+
+As introduced in the previous section, data augmentation is integrated directly into the model pipeline and applied immediately after the input layer. This design choice ensures that augmentation is performed exclusively during training, while validation and test samples remain unaltered.
+
+\subsubsection{Architectural structure}
+
+The architecture of Model A follows a standard convolutional design commonly adopted for image classification tasks and is summarized schematically below. All layers are implemented using the Keras Layers API \cite{keras_layers_api}.
+
+\begin{itemize}
+    \item \textbf{Input layer}: RGB images of fixed spatial resolution are provided to the network through an explicit input layer \cite{keras_input_layer}.
+    
+    \item \textbf{Data augmentation}: the augmentation pipeline described in the previous section is applied during training to improve robustness to geometric variations.
+    
+    \item \textbf{First convolutional block}: a Conv2D layer with 32 filters and $3\times3$ kernels is used to extract low-level visual features, followed by a MaxPooling2D layer that reduces the spatial resolution \cite{keras_conv2d,keras_maxpooling2d}. ReLU activations are employed to introduce non-linearity \cite{keras_relu}.
+    
+    \item \textbf{Second convolutional block}: a second Conv2D layer increases the number of filters to 64, enabling the network to learn more abstract feature representations. Spatial downsampling is again performed via max-pooling \cite{keras_conv2d,keras_maxpooling2d}.
+    
+    \item \textbf{Flatten layer}: the resulting feature maps are flattened into a one-dimensional vector to interface with the fully connected layers \cite{keras_flatten}.
+    
+    \item \textbf{Fully connected layer}: a dense layer with 128 units and ReLU activation combines the extracted features into a compact representation \cite{keras_dense,keras_relu}.
+    
+    \item \textbf{Output layer}: the final dense layer consists of three neurons with softmax activation, producing a normalized probability distribution over the three target classes \cite{keras_dense}.
+\end{itemize}
+
+The use of multiple convolutional blocks allows the network to progressively learn hierarchical feature representations, where early layers capture low-level visual patterns while deeper layers encode increasingly abstract and discriminative features \cite{simonyan2015vgg}.  
+At the same time, limiting the architecture to two convolutional blocks keeps the model complexity low, making it suitable as a baseline reference.
+
+\subsubsection{Training configuration}
+
+The model is compiled using the Adam optimizer \cite{keras_optimizers} with a learning rate of 0.001 and the Sparse Categorical Cross-Entropy loss function, which is appropriate for multi-class classification problems with integer-encoded labels \cite{keras_losses}.  
+Training is performed using the \texttt{fit} method provided by Keras \cite{keras_model_fit}.  
+During training, classification accuracy on the validation set is monitored in order to track the learning dynamics and detect potential overfitting.
+
+\subsection{Model B: tuned CNN}
+Model B extends the baseline architecture introduced in Model A with the objective of exploring the impact of key architectural and training choices on model behavior.  
+Rather than introducing a substantially different network design, this model adopts a controlled experimental approach in which architectural depth, feature extraction capacity, and optimization parameters are varied within a predefined search space.
+
+In line with the exploratory perspective outlined in the project introduction, Model B incorporates an explicit grid search procedure over a limited set of hyperparameters.  
+This approach enables a structured investigation of how changes in the number of convolutional blocks, the base number of filters, and the learning rate affect training dynamics, while preserving the overall convolutional structure of the baseline model.  
+Additional regularization mechanisms, including batch normalization and dropout, are introduced to improve training stability and robustness.
+
+
+
+\subsubsection{Architectural structure}
+
+The architectural structure of Model B follows the same overall design principles as the baseline CNN, while allowing for greater flexibility in depth and regularization.  
+All layers are implemented using the Keras Layers API \cite{keras_layers_api}.
+
+\begin{itemize}
+    \item \textbf{Input layer}: RGB images of fixed spatial resolution are provided through an explicit input layer \cite{keras_input_layer}.
+    
+    \item \textbf{Data augmentation}: the data augmentation pipeline introduced in the previous section is applied during training.
+    
+    \item \textbf{Convolutional blocks}: the feature extraction stage consists of a variable number of convolutional blocks.  
+    Each block includes:
+    \begin{itemize}
+        \item a Conv2D layer with $3\times3$ kernels \cite{keras_conv2d},
+        \item an optional Batch Normalization layer \cite{keras_batch_normalization},
+        \item a ReLU activation function \cite{keras_relu},
+        \item a MaxPooling2D layer for spatial downsampling \cite{keras_maxpooling2d},
+        \item an optional Dropout layer for regularization \cite{keras_dropout}.
+    \end{itemize}
+    
+    \item \textbf{Flatten layer}: the final feature maps are flattened into a one-dimensional representation \cite{keras_flatten}.
+    
+    \item \textbf{Fully connected layer}: a dense layer with 128 units and ReLU activation \cite{keras_dense,keras_relu}.
+    
+    \item \textbf{Output layer}: a dense layer with three neurons and softmax activation produces class probability estimates \cite{keras_dense}.
+\end{itemize}
+
+\subsubsection{Hyperparameter tuning}
+
+In line with the exploratory perspective outlined in the project introduction, Model B introduces an explicit hyperparameter tuning phase based on a grid search strategy.  
+The search space is deliberately kept limited in order to enable a controlled investigation of the impact of architectural depth, feature extraction capacity, and optimization dynamics.
+
+The grid search explores combinations of the following hyperparameters:
+\begin{itemize}
+    \item number of convolutional blocks: $\{2, 3\}$,
+    \item base number of convolutional filters: $\{32, 64\}$,
+    \item learning rate of the Adam optimizer: $\{10^{-3}, 3\times10^{-4}\}$.
+\end{itemize}
+
+This results in a total of eight distinct configurations, all trained using the same data splits and random seed to ensure a fair comparison.  
+For each configuration, the best validation accuracy observed during training is recorded.  
+The complete set of results is stored in a structured CSV file for reproducibility and further analysis.
+
+Among the evaluated configurations, the best-performing setup is:
+
+\begin{itemize}
+    \item number of convolutional blocks: X,
+    \item base number of filters: Y,
+    \item learning rate: Z,
+\end{itemize}
+
+which achieved a validation accuracy of A and a validation loss of B.
+This configuration is therefore selected to train the final instance of Model B.
+
+
+\subsubsection{Training configuration}
+
+The final instance of Model B is trained using the Adam optimizer \cite{adam_optimizer_lr}, with the learning rate set according to the best configuration identified during the hyperparameter tuning phase.  
+Training is performed for a maximum of 15 epochs.
+
+Early stopping is employed as a regularization strategy to prevent overfitting by monitoring the validation loss during training \cite{keras_early_stopping_callback,keras_callbacks_early_stopping}.  
+When no improvement is observed for a fixed number of epochs, training is halted and the model weights corresponding to the lowest validation loss are restored.
+
+As in the previous models, training dynamics are monitored using loss and classification accuracy on the validation set.
+
+
 
 \subsection{Model C: complex CNN}
+
+Model C represents a further evolution of the tuned CNN introduced in Model B and is designed to explore a broader architectural and regularization space.  
+While Model B focuses on a controlled grid search over a limited set of hyperparameters, Model C adopts a more flexible and expressive design, both in terms of network architecture and optimization strategy.
+
+In particular, Model C introduces additional regularization mechanisms, deeper convolutional configurations, and a random search strategy for hyperparameter exploration.  
+This model is intended to assess whether increased architectural expressiveness and stochastic hyperparameter sampling can further improve performance beyond the tuned configuration identified in Model B.
+
+\subsubsection{Architectural structure}
+
+Model C is implemented using the Keras Functional API, which allows for greater flexibility in defining complex architectures compared to the Sequential paradigm used in Models A and B \cite{keras_functional_api}.  
+The overall convolutional structure is preserved, while several architectural enhancements are introduced.
+
+\begin{itemize}
+    \item \textbf{Input layer}: RGB images of fixed spatial resolution are provided through an explicit input layer.
+    
+    \item \textbf{Data augmentation}: the same augmentation pipeline used in previous models is applied during training.
+    
+    \item \textbf{Convolutional blocks}: the feature extraction stage consists of a variable number of convolutional blocks ($n \in \{3, 4\}$).  
+    Each block includes:
+    \begin{itemize}
+        \item a Conv2D layer with $3\times3$ kernels and He normal initialization \cite{he_initialization},
+        \item optional L2 kernel regularization to penalize large weights \cite{keras_l2_regularizer},
+        \item an optional Batch Normalization layer,
+        \item a ReLU activation function,
+        \item a MaxPooling2D layer for spatial downsampling,
+        \item an optional SpatialDropout2D layer to regularize entire feature maps \cite{keras_spatial_dropout2d}.
+    \end{itemize}
+    
+    \item \textbf{Flatten layer}: feature maps are flattened into a one-dimensional representation.
+    
+    \item \textbf{Fully connected layer}: a dense layer with a variable number of units ($\{128, 256, 512\}$), optionally regularized via L2 penalties.
+    
+    \item \textbf{Output layer}: a dense layer with three neurons and softmax activation produces class probability estimates.
+\end{itemize}
+
+\subsubsection{Hyperparameter search}
+
+\subsubsection{Hyperparameter search}
+
+Unlike Model B, which relies on a grid search strategy, Model C adopts a random search approach to explore a higher-dimensional hyperparameter space \cite{bergstra_bengio_random_search}.  
+Random search is particularly suitable in this setting, as the number of tunable hyperparameters increases and exhaustive exploration would become computationally prohibitive.
+
+A total of 12 random trials is performed.  
+For each trial, a single configuration is sampled by randomly selecting architectural and regularization parameters, as well as the learning rate of the Adam optimizer.  
+In particular, the learning rate is sampled log-uniformly over a predefined range, allowing the exploration of multiple orders of magnitude.
+
+The following hyperparameters are included in the random search:
+\begin{itemize}
+    \item number of convolutional blocks,
+    \item base number of convolutional filters,
+    \item number of units in the dense layer,
+    \item spatial dropout rate in convolutional blocks,
+    \item dropout rate in the classification head,
+    \item L2 regularization strength,
+    \item learning rate of the Adam optimizer.
+\end{itemize}
+
+For each sampled configuration, the best validation accuracy and the corresponding validation loss observed during training are recorded.  In case of ties in validation accuracy, the configuration with the lowest validation loss is selected.
+
+The complete set of results for all trials is stored in a CSV file to ensure reproducibility and transparency.
+
+Among the evaluated configurations, the model with four convolutional blocks, 64 base filters, 256 units in the dense layer, and a learning rate of approximately $3.8\times10^{-5}$ achieves the highest validation accuracy (0.982), together with the lowest validation loss.  
+This configuration is therefore selected to train the final instance of Model C, whose performance is analyzed in the evaluation section.
+
+\subsubsection{Training configuration}
+
+Model C is trained using the Adam optimizer, with the learning rate selected according to the best configuration identified during the random search phase.  
+Training is performed for a maximum of 15 epochs.
+
+Early stopping is employed to prevent overfitting by monitoring the validation loss.  
+In addition, a learning rate scheduling strategy is introduced through the ReduceLROnPlateau callback, which automatically reduces the learning rate when the validation loss stops improving \cite{keras_reduce_lr_on_plateau_tf,keras_reduce_lr_on_plateau}.
+
+As in the previous models, training dynamics are monitored using loss and classification accuracy on the validation set.
+
+
+
+
+
 
 
 %--------------------------------------------------------------------
 \section{Evaluation and analysis}
 
-\subsection{Experimental Results}
+\subsection{Experimental results}
 % quantitative results
 
-\subsection{Model Comparison}
+\subsection{Model comparison}
 % table + metrics
 
 \subsection{Discussion}

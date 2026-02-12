@@ -89,7 +89,7 @@ def save_confusion_matrix(y_true, y_pred, class_names, out_path):
 
     plt.figure()
     disp.plot(values_format="d")
-    plt.title("confusion matrix - validation")
+    plt.title("Confusion matrix - validation")
     plt.savefig(out_path)
     plt.close()
 
