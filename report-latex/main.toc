@@ -1,7 +1,20 @@
-\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
-\contentsline {section}{\numberline {2}Data exploration and preprocessing}{2}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Exploratory Data Analysis}{2}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Preprocessing}{3}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Train, validation and test splitting}{3}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Normalization}{3}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Data augmentation}{3}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Data exploration and preprocessing}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Exploratory Data Analysis}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Preprocessing}{4}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Train, validation and test splitting}{4}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Normalization}{4}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Data augmentation}{4}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {3}CNN architecture and training}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Model A: baseline CNN}{5}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Architectural structure}{5}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Training configuration}{6}{subsubsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.2}Model B: tuned CNN}{6}{subsection.3.2}%
+\contentsline {subsubsection}{\numberline {3.2.1}Architectural structure}{6}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Hyperparameter tuning}{7}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Training configuration}{7}{subsubsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.3}Model C: random-search CNN}{8}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Architectural structure}{8}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Hyperparameter tuning via random search}{9}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Training configuration}{9}{subsubsection.3.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.4}Best configuration and analysis}{9}{subsubsection.3.3.4}%

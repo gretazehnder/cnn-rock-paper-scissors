@@ -22,18 +22,11 @@ CLASS_NAMES = ["paper", "rock", "scissors"]
 GEN_DIR = Path.home() / "OneDrive" / "Desktop" / "generalization_dataset"
 
 #model c path
-MODEL_PATH = Path("models/model_a/model_a.keras")
+MODEL_PATH = Path("models/model_c/model_c.keras")# here model c was loaded, but it is possible to load any model by changing this path
 
 #data loading
 def load_generalization_ds(gen_dir: Path) -> tf.data.Dataset:
-    """
-    Carica il dataset esterno da cartelle:
-    generalization_dataset/
-      paper/
-      rock/
-      scissors/
-    Applica resize e rescaling a [0,1], come nel training.
-    """
+    
     if not gen_dir.exists():
         raise FileNotFoundError(f"Generalization dataset folder not found: {gen_dir}")
 
@@ -59,7 +52,7 @@ def load_generalization_ds(gen_dir: Path) -> tf.data.Dataset:
 
 #evaluation
 def main():
-    print(f"Loading Model C from: {MODEL_PATH}")
+    print(f"Loading model from: {MODEL_PATH}")
     if not MODEL_PATH.exists():
         raise FileNotFoundError(f"Model file not found: {MODEL_PATH}")
 
@@ -85,7 +78,7 @@ def main():
     cm = confusion_matrix(y_true, y_pred)
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=CLASS_NAMES)
     disp.plot(values_format="d")
-    plt.title("Model C - Generalization Test (Confusion Matrix)")
+    plt.title(f"Model {MODEL_PATH.stem} - Generalization test (Confusion Matrix)")
     plt.tight_layout()
     plt.show()
 

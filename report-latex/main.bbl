@@ -1,4 +1,59 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
+
+\bibitem{bergstra_bengio_random_search}
+James Bergstra and Yoshua Bengio.
+\newblock Random search for hyper-parameter optimization.
+\newblock {\em Journal of Machine Learning Research}, 13:281--305, 2012.
+
+\bibitem{he_initialization}
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+\newblock Delving deep into rectifiers: Surpassing human-level performance on
+  imagenet classification.
+\newblock {\em arXiv preprint arXiv:1502.01852}, 2015.
+
+\bibitem{adam_optimizer_lr}
+{Keras Team}.
+\newblock Adam optimizer.
+\newblock \url{https://keras.io/api/optimizers/adam/}, 2024.
+
+\bibitem{keras_batch_normalization}
+{Keras Team}.
+\newblock Batchnormalization layer.
+\newblock
+  \url{https://keras.io/api/layers/normalization_layers/batch_normalization/},
+  2024.
+
+\bibitem{keras_conv2d}
+{Keras Team}.
+\newblock Conv2d layer.
+\newblock \url{https://keras.io/api/layers/convolution_layers/convolution2d/},
+  2024.
+
+\bibitem{keras_dense}
+{Keras Team}.
+\newblock Dense layer.
+\newblock \url{https://keras.io/api/layers/core_layers/dense/}, 2024.
+
+\bibitem{keras_dropout}
+{Keras Team}.
+\newblock Dropout layer.
+\newblock \url{https://keras.io/api/layers/regularization_layers/dropout/},
+  2024.
+
+\bibitem{keras_callbacks_early_stopping}
+{Keras Team}.
+\newblock Early stopping.
+\newblock \url{https://keras.io/api/callbacks/early_stopping/}, 2024.
+
+\bibitem{keras_flatten}
+{Keras Team}.
+\newblock Flatten layer.
+\newblock \url{https://keras.io/api/layers/reshaping_layers/flatten/}, 2024.
+
+\bibitem{keras_functional_api}
+{Keras Team}.
+\newblock The functional api.
+\newblock \url{https://keras.io/guides/functional_api/}, 2024.
 
 \bibitem{keras_augmentation_layers}
 {Keras Team}.
@@ -7,10 +62,68 @@
   \url{https://keras.io/api/layers/preprocessing_layers/image_augmentation/},
   2024.
 
+\bibitem{keras_input_layer}
+{Keras Team}.
+\newblock Input layer.
+\newblock \url{https://keras.io/api/layers/core_layers/input/}, 2024.
+
 \bibitem{keras_imageloading}
 {Keras Team}.
 \newblock Keras image data loading api.
 \newblock \url{https://keras.io/api/data_loading/image/}, 2024.
+
+\bibitem{keras_losses}
+{Keras Team}.
+\newblock Keras loss functions.
+\newblock \url{https://keras.io/api/losses/}, 2024.
+
+\bibitem{keras_models_overview}
+{Keras Team}.
+\newblock Keras models api.
+\newblock \url{https://keras.io/api/models/}, 2024.
+
+\bibitem{keras_optimizers}
+{Keras Team}.
+\newblock Keras optimizers.
+\newblock \url{https://keras.io/api/optimizers/}, 2024.
+
+\bibitem{keras_maxpooling2d}
+{Keras Team}.
+\newblock Maxpooling2d layer.
+\newblock \url{https://keras.io/api/layers/pooling_layers/max_pooling2d/},
+  2024.
+
+\bibitem{keras_model_fit}
+{Keras Team}.
+\newblock Model training with \texttt{fit}.
+\newblock \url{https://keras.io/api/models/model_training_apis/}, 2024.
+
+\bibitem{keras_reduce_lr_on_plateau}
+{Keras Team}.
+\newblock Reduce learning rate on plateau.
+\newblock \url{https://keras.io/api/callbacks/reduce_lr_on_plateau/}, 2024.
+
+\bibitem{keras_relu}
+{Keras Team}.
+\newblock Relu activation function.
+\newblock \url{https://keras.io/api/layers/activations/}, 2024.
+
+\bibitem{keras_sequential_model}
+{Keras Team}.
+\newblock Sequential model.
+\newblock \url{https://keras.io/api/models/sequential/}, 2024.
+
+\bibitem{keras_sequential_guide}
+{Keras Team}.
+\newblock The sequential model guide.
+\newblock \url{https://keras.io/guides/sequential_model/}, 2024.
+
+\bibitem{keras_spatial_dropout2d}
+{Keras Team}.
+\newblock Spatialdropout2d layer.
+\newblock
+  \url{https://keras.io/api/layers/regularization_layers/spatial_dropout2d/},
+  2024.
 
 \bibitem{rockpaperscissors_kaggle}
 Laurence Moroney.
@@ -18,10 +131,30 @@ Laurence Moroney.
 \newblock \url{https://www.kaggle.com/datasets/drgfreeman/rockpaperscissors},
   2019.
 
+\bibitem{simonyan2015vgg}
+Karen Simonyan and Andrew Zisserman.
+\newblock Very deep convolutional networks for large-scale image recognition.
+\newblock {\em International Conference on Learning Representations (ICLR)},
+  2015.
+
 \bibitem{tensorflow_data_augmentation_examples}
 {TensorFlow Developers}.
 \newblock Data augmentation for images.
 \newblock \url{https://www.tensorflow.org/tutorials/images/data_augmentation},
+  2024.
+
+\bibitem{keras_early_stopping_callback}
+{TensorFlow Developers}.
+\newblock Earlystopping callback.
+\newblock
+  \url{https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/EarlyStopping},
+  2024.
+
+\bibitem{keras_l2_regularizer}
+{TensorFlow Developers}.
+\newblock L2 regularization.
+\newblock
+  \url{https://www.tensorflow.org/api_docs/python/tf/keras/regularizers/L2},
   2024.
 
 \bibitem{tensorflow_augmentation_inside_model}
@@ -41,6 +174,13 @@ Laurence Moroney.
 \newblock Optimizing data input pipeline: parallel mapping.
 \newblock
   \url{https://www.tensorflow.org/guide/data_performance#parallel_mapping},
+  2024.
+
+\bibitem{keras_reduce_lr_on_plateau_tf}
+{TensorFlow Developers}.
+\newblock Reducelronplateau callback.
+\newblock
+  \url{https://www.tensorflow.org/api_docs/python/tf/keras/callbacks/ReduceLROnPlateau},
   2024.
 
 \bibitem{tensorflow_rescaling}
