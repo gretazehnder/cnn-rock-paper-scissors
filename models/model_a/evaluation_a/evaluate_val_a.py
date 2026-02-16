@@ -21,8 +21,8 @@ from preprocessing.data_pipeline import get_datasets
 
 #paths
 
-#getting project root 
-BASE_DIR = Path(__file__).resolve().parents[3]
+#project root directory
+BASE_DIR = PROJECT_ROOT
 
 #paths to model and evaluation folder
 MODEL_DIR = BASE_DIR / "models" / "model_a"

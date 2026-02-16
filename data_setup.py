@@ -2,13 +2,13 @@ import zipfile
 from pathlib import Path
 
 
-# Root del progetto (cartella dove si trova data_setup.py)
+#project root
 BASE_DIR = Path(__file__).resolve().parent
 
-# Path al file zip
+#file zip path
 ZIP_PATH = BASE_DIR / "archive.zip"
 
-# Cartella di destinazione del dataset
+#dataset destination fold
 DATASET_DIR = BASE_DIR / "dataset"
 
 

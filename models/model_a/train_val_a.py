@@ -6,7 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
-# adding project root to python path
+#adding project root to python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
@@ -19,16 +19,16 @@ OUT_DIR.mkdir(parents=True, exist_ok=True)
 NUM_CLASSES = 3
 
 
-# function for model a (baseline)
+#function for model a (baseline)
 def build_model_a(augmentation_layer):
     model = keras.Sequential(
         [
             layers.Input(shape=(*IMAGE_SIZE, 3), name="input_image"),
 
-            # data augmentation layer
+            #data augmentation layer
             augmentation_layer,
 
-            # first conv block
+            #first conv block
             layers.Conv2D(
                 filters=32,
                 kernel_size=(3, 3),
@@ -37,7 +37,7 @@ def build_model_a(augmentation_layer):
             ),
             layers.MaxPooling2D(pool_size=(2, 2)),
 
-            # second conv block
+            #second conv block
             layers.Conv2D(
                 filters=64,
                 kernel_size=(3, 3),
@@ -46,11 +46,11 @@ def build_model_a(augmentation_layer):
             ),
             layers.MaxPooling2D(pool_size=(2, 2)),
 
-            # classifier head
+            #classifier head
             layers.Flatten(),
             layers.Dense(units=128, activation="relu"),
 
-            # output
+            #output
             layers.Dense(units=NUM_CLASSES, activation="softmax", name="pred"),
         ],
         name="model_a_baseline",

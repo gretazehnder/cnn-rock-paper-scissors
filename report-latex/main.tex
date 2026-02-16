@@ -301,6 +301,181 @@ This is consistent with the increased architectural complexity: deeper networks 
 The final instance of Model C is retrained using this configuration and saved together with the training history and random-search results.
 
 
+%--------------------------------------------------------------------
+\section{Evaluation and comparative analysis}
+\subsection{Training and validation curves}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_a/evaluation_a/accuracy_a.png}
+        \caption{Model A}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_b/evaluation_b/accuracy_b.png}
+        \caption{Model B}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_c/evaluation_c/accuracy_c.png}
+        \caption{Model C}
+    \end{subfigure}
+    \caption{Training and validation accuracy curves for the three models.}
+    \label{fig:accuracy_comparison}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_a/evaluation_a/loss_a.png}
+        \caption{Model A}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_b/evaluation_b/loss_b.png}
+        \caption{Model B}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_c/evaluation_c/loss_c.png}
+        \caption{Model C}
+    \end{subfigure}
+    \caption{Training and validation loss curves for the three models.}
+    \label{fig:loss_comparison}
+\end{figure}
+
+Figures~\ref{fig:accuracy_comparison} and~\ref{fig:loss_comparison} illustrate the evolution of accuracy and loss during training for all models, highlighting the progressive impact of architectural refinement and optimization strategies.
+
+Model A exhibits smooth and stable convergence: training accuracy increases steadily across epochs, while validation accuracy follows a similar trend with only a small gap between the two curves. The corresponding loss curves decrease consistently, and only a slight rise in validation loss appears in the final epoch, suggesting a mild onset of overfitting. Overall, the baseline architecture demonstrates balanced bias-variance behavior and reliable generalization.
+
+Model B converges faster than the baseline model, with both training and validation accuracy increasing rapidly during the first epochs and reaching high values much earlier than in Model A. At the same time, validation loss decreases quickly and stabilizes at a lower level compared to the baseline. The training and validation curves remain close to each other throughout the process, which suggests that the model does not suffer from significant overfitting.
+
+Early stopping is activated before reaching the maximum number of epochs, indicating that the model had already reached a stable performance level and that further training would not have led to meaningful improvements. Overall, Model B shows a smoother and more efficient learning process, with improved validation performance and no clear signs of underfitting or overfitting.
+
+Model C shows a more irregular behavior in the first training epochs, where validation accuracy and loss fluctuate more than in the previous models. This is likely due to the increased depth of the network and the stronger regularization mechanisms, which make the optimization slightly more unstable at the beginning. After this initial phase, both training and validation curves become smoother and improve steadily over time, with a small and consistent gap between them.
+
+The learning-rate scheduling mechanism helps the model converge more gradually in the later epochs, as visible in the continuous reduction of validation loss. Unlike Model B, early stopping is not activated, since validation loss keeps improving within the fixed number of epochs. Importantly, there are no clear signs of overfitting, as validation performance remains aligned with training performance throughout training. Overall, Model C achieves the highest validation accuracy while maintaining stable generalization behavior.
+
+Taken together, the curves reveal a clear progression: the baseline model provides stable performance, structured hyperparameter tuning improves convergence efficiency and reduces validation loss, and the introduction of random search, deeper architecture, and adaptive learning-rate scheduling yields further, though incrementally smaller, gains in validation accuracy.
+
+\subsection{Test set performance}
+
+\begin{table}[H]
+\centering
+\caption{Test set performance comparison across models.}
+\label{tab:test_results}
+\begin{tabular}{lcccc}
+\toprule
+Model & Test accuracy & Test loss & Macro F1 & Weighted F1 \\
+\midrule
+Model A & 0.9663 & 0.1267 & 0.9658 & 0.9661 \\
+Model B & 0.9693 & 0.1334 & 0.9690 & 0.9693 \\
+Model C & 0.9847 & 0.0744 & 0.9845 & 0.9846 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_a/evaluation_a/confusion_matrix_test_a.png}
+        \caption{Model A}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_b/evaluation_b/confusion_matrix_test_b.png}
+        \caption{Model B}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.32\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_c/evaluation_c/confusion_matrix_test_c.png}
+        \caption{Model C}
+    \end{subfigure}
+    \caption{Confusion matrices on the test set for all models.}
+    \label{fig:cm_comparison}
+\end{figure}
+
+Table~\ref{tab:test_results} summarizes the final performance of all models on the held-out test set. 
+Model A already achieves strong generalization, with accuracy above 96\%. 
+Model B provides a slight improvement in classification performance, although with a marginally higher test loss.
+
+Model C achieves the highest test accuracy (0.9847) and the lowest test loss (0.0744), confirming the effectiveness of deeper architecture, stochastic hyperparameter search, and adaptive learning-rate scheduling.
+
+Figure~\ref{fig:cm_comparison} further highlights this progression: in fact, while Models A and B exhibit minor confusion primarily between paper and rock, Model C shows near-perfect class separation. 
+In particular, the classes rock and scissors are classified without error, and only a few paper samples are misclassified.
+
+These results demonstrate that architectural refinement and advanced optimization strategies yield consistent improvements in generalization performance, with Model C providing the most robust, accurate and reliable predictions on unseen data.
+
+\subsection{Error analysis and misclassified examples}
+
+Error analysis is conducted exclusively on the held-out test set to ensure an unbiased assessment of generalization performance.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_a/evaluation_a/misclassified_test_a.png}
+        \caption{Model A}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_b/evaluation_b/misclassified_test_b.png}
+        \caption{Model B}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{../models/model_c/evaluation_c/misclassified_test_c.png}
+        \caption{Model C}
+    \end{subfigure}
+    \caption{Examples of misclassified test samples for each model. True labels are shown above each image and predicted labels below.}
+    \label{fig:misclassified_examples}
+\end{figure}
+
+\paragraph{Model B.}
+
+Figure~\ref{fig:misclassified_examples} (Model A) displays up to nine representative misclassified test samples. 
+As we have observed in the confusion matrix, Model A misclassifies seven instances of \textit{paper} and four instances of \textit{rock}, while all \textit{scissors} samples are correctly classified.
+The examples plotted show how errors involve the class \textit{paper}, which is sometimes predicted as \textit{scissors} when the fingers are partially separated, or as \textit{rock} when the hand is slightly rotated or partially closed. 
+The misclassified \textit{rock} samples are instead predicted as \textit{paper}, typically in cases where lighting or hand orientation reduces the visual prominence of the closed fist.
+
+\paragraph{Model B.}
+
+Figure~\ref{fig:misclassified_examples} (Model B) shows nine (of the ten total errors) representative misclassified test samples. 
+Although the overall number of errors is comparable to Model~A, their distribution changes slightly.
+
+Several misclassifications still involve the class \textit{paper}, which is often predicted as \textit{rock} and occasionally as \textit{scissors}, confirming that flat-hand configurations remain visually ambiguous under certain orientations. 
+In addition, two \textit{rock} samples are predicted as \textit{paper}, and one \textit{scissors} sample is also classified as \textit{paper}. 
+
+Compared to Model~A, the confusion appears more evenly distributed across classes rather than concentrated primarily on \textit{paper}. 
+
+\paragraph{Model C.}
+
+Figure~\ref{fig:misclassified_examples} (Model C) shows a smaller and more concentrated set of errors compared to the previous models: all misclassified samples belong to the class \textit{paper}, which is occasionally predicted as either \textit{rock} or \textit{scissors}, while no instances of \textit{rock} or \textit{scissors} are incorrectly classified. 
+
+This suggests that the model has learned to clearly distinguish between closed-fist and two-finger configurations, and that the remaining ambiguity is limited to certain flat-hand gestures where finger spread, orientation, or lighting conditions make the visual pattern less distinct. 
+
+These observations further confirm that, as the qualitative inspection of the errors aligns with the test metrics, Model C achieves the most stable and reliable behavior among the three architectures.
+
+
+\subsection{Discussion}
+
+While Model C achieves the highest generalization performance, these improvements come at the cost of increased computational complexity, as deeper architectures, random hyperparameter search, and adaptive learning-rate scheduling significantly raise training time and resource consumption compared to the baseline model. In particular, the introduction of additional convolutional blocks, Batch Normalization, and multiple regularization mechanisms increases both the number of trainable parameters and the overall optimization overhead, making the model less suitable for constrained environments despite its superior accuracy.
+
+Further performance gains could potentially be obtained through more extensive hyperparameter optimization, larger search spaces, data augmentation strategies of greater diversity, or transfer learning from pre-trained convolutional backbones; however, such approaches were not explored in this study in order to maintain a controlled experimental setup and reasonable computational cost. Therefore, the results highlight a practical trade-off between architectural sophistication and efficiency, suggesting that Model B may represent a balanced compromise when computational resources are limited, while Model C is preferable when maximum predictive performance is required.
+
+
 
 
 

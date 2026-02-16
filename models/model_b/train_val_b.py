@@ -44,7 +44,7 @@ def build_model_b(
         model.add(layers.MaxPooling2D(pool_size=(2, 2)))
         filters *= 2
 
-    # FLATTEN instead of GAP
+    
     model.add(layers.Flatten())
 
     model.add(layers.Dense(dense_units, activation="relu"))
@@ -63,15 +63,15 @@ def save_results_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main():
-    # fixed hyperparameters
+    #fixed hyperparameters
     DENSE_UNITS = 256  #larger head than Model A to accommodate the increased backbone capacity
     EPOCHS = 20
     EARLY_STOP_PATIENCE = 3
 
-    # datasets
+    #datasets
     train_ds, val_ds, _ = get_datasets()
 
-    # grid search space
+    #grid search space
     grid = {
         "n_blocks": [2, 3],
         "base_filters": [32, 64],
@@ -132,11 +132,11 @@ def main():
 
         print(f"[GRID] {cfg_dict} -> best_val_acc={best_val_acc:.4f}")
 
-    # select best: highest accuracy, tie-break lowest loss
+    #best configuration selection: highest accuracy, tie-break lowest loss
     results_sorted = sorted(results, key=lambda r: (-r["best_val_acc"], r["best_val_loss"]))
     best = results_sorted[0]
 
-    # save tuning results
+    #saving tuning results
     with open(OUT_DIR / "gs_results_b.json", "w") as f:
         json.dump(results_sorted, f, indent=2)
     save_results_csv(OUT_DIR / "gs_results_b.csv", results_sorted)
@@ -147,7 +147,7 @@ def main():
     print("\nBest configuration (best val_accuracy, tie-break val_loss):")
     print(json.dumps(best, indent=2))
 
-    # final training with best hp
+    #final training with best hp
     keras.backend.clear_session()
     tf.keras.utils.set_random_seed(42)
 

@@ -94,7 +94,6 @@ def sample_config(rng: np.random.Generator, lr_min: float, lr_max: float) -> dic
     return {
         "n_blocks": int(rng.choice([3, 4])),
         "base_filters": int(rng.choice([32, 64])),
-        # keep only 256 and 512 (exclude 128)
         "dense_units": int(rng.choice([256, 512])),
         "spatial_dropout": float(rng.choice([0.0, 0.10])),
         "dropout_head": float(rng.choice([0.3, 0.4, 0.5])),
@@ -124,7 +123,6 @@ def main():
 
         cfg = sample_config(rng, LR_MIN, LR_MAX)
 
-        # new augmentation instance per trial
         aug = get_augmentation_layer()
 
         model = build_model_c(
@@ -201,11 +199,11 @@ def main():
     print("\nbest configuration (best val_accuracy, tie-break val_loss):")
     print(json.dumps(best, indent=2))
 
-    # retrain final model with best hyperparameters
+    #retraining final model with best hyperparameters
     keras.backend.clear_session()
     tf.keras.utils.set_random_seed(SEED)
 
-    # new augmentation instance for final model too
+    #new augmentation instance for final model too
     aug = get_augmentation_layer()
 
     model = build_model_c(

@@ -11,15 +11,17 @@ from sklearn.metrics import confusion_matrix, classification_report, ConfusionMa
 
 import sys
 
-# adding project root to python path
+#adding project root to python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
 from preprocessing.data_pipeline import get_datasets
 
 
-# paths
-BASE_DIR = Path(__file__).resolve().parents[2]
+#paths
+
+#project root directory
+BASE_DIR = PROJECT_ROOT
 
 MODEL_DIR = BASE_DIR / "models" / "model_c"
 EVAL_DIR = MODEL_DIR / "evaluation_c"
@@ -27,7 +29,7 @@ EVAL_DIR = MODEL_DIR / "evaluation_c"
 MODEL_PATH = MODEL_DIR / "model_c.keras"
 
 
-# utility functions
+#utility functions
 def collect_predictions(model, dataset):
     y_true = []
     y_pred = []
@@ -104,7 +106,7 @@ def main():
 
     tf.keras.utils.set_random_seed(42)
 
-    # load model
+    #loading model
     model = keras.models.load_model(MODEL_PATH)
 
     model.compile(
@@ -113,21 +115,21 @@ def main():
         metrics=["accuracy"],
     )
 
-    # load test dataset
+    #loading test dataset
     _, _, test_ds = get_datasets()
 
     class_names = ["paper", "rock", "scissors"]
 
-    # evaluate
+    #evaluation
     test_loss, test_acc = model.evaluate(test_ds, verbose=0)
     print(f"TEST loss: {test_loss:.4f} | TEST accuracy: {test_acc:.4f}")
 
     save_test_metrics_txt(test_loss, test_acc, EVAL_DIR / "metrics_test_c.txt")
 
-    # predictions
+    #predictions
     y_true, y_pred, x_images = collect_predictions(model, test_ds)
 
-    # confusion matrix
+    #confusion matrix
     save_confusion_matrix(
         y_true,
         y_pred,
@@ -136,7 +138,7 @@ def main():
         title="Confusion Matrix - TEST (Model C)",
     )
 
-    # classification report
+    #classification report
     report = classification_report(
         y_true,
         y_pred,
@@ -150,7 +152,7 @@ def main():
     with open(EVAL_DIR / "classification_report_test_c.txt", "w") as f:
         f.write(report)
 
-    # misclassified examples
+    #misclassified examples
     save_misclassified_grid(
         x_images,
         y_true,

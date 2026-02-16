@@ -11,15 +11,17 @@ from sklearn.metrics import confusion_matrix, classification_report, ConfusionMa
 
 import sys
 
-# adding project root to python path
+#adding project root to python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
 from preprocessing.data_pipeline import get_datasets
 
 
-# paths
-BASE_DIR = Path(__file__).resolve().parents[2]
+#paths
+
+#project root directory
+BASE_DIR = PROJECT_ROOT
 
 MODEL_DIR = BASE_DIR / "models" / "model_a"
 EVAL_DIR = MODEL_DIR / "evaluation_a"
@@ -27,7 +29,7 @@ EVAL_DIR = MODEL_DIR / "evaluation_a"
 MODEL_PATH = MODEL_DIR / "model_a.keras"
 
 
-# utility functions
+#utility functions
 def collect_predictions(model, dataset):
     y_true = []
     y_pred = []
@@ -104,32 +106,32 @@ def main():
 
     tf.keras.utils.set_random_seed(42)
 
-    # load model
+    #loading model
     model = keras.models.load_model(MODEL_PATH)
 
-    # (safety) ensure compiled for evaluate
+    #(safety) ensuring compiled for evaluate
     model.compile(
         optimizer="adam",
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
         metrics=["accuracy"],
     )
 
-    # load datasets (keep only test)
+    #loading datasets (only test)
     _, _, test_ds = get_datasets()
 
-    # fixed class order (must match pipeline)
+    #fixed class order (matching pipeline)
     class_names = ["paper", "rock", "scissors"]
 
-    # final evaluation on test set
+    #final evaluation on test set
     test_loss, test_acc = model.evaluate(test_ds, verbose=0)
     print(f"TEST loss: {test_loss:.4f} | TEST accuracy: {test_acc:.4f}")
 
     save_test_metrics_txt(test_loss, test_acc, EVAL_DIR / "metrics_test_a.txt")
 
-    # collect predictions
+    #collecting predictions
     y_true, y_pred, x_images = collect_predictions(model, test_ds)
 
-    # confusion matrix
+    #confusion matrix
     save_confusion_matrix(
         y_true,
         y_pred,
@@ -138,7 +140,7 @@ def main():
         title="Confusion Matrix - TEST (Model A)",
     )
 
-    # classification report (printed and saved)
+    #classification report (printed and saved)
     report = classification_report(
         y_true,
         y_pred,
@@ -151,7 +153,7 @@ def main():
     with open(EVAL_DIR / "classification_report_test_a.txt", "w") as f:
         f.write(report)
 
-    # misclassified visualization
+    #misclassified visualization
     save_misclassified_grid(
         x_images,
         y_true,
@@ -160,7 +162,7 @@ def main():
         EVAL_DIR / "misclassified_test_a.png",
     )
 
-    # misclassified csv
+    #misclassified csv
     save_misclassified_csv(
         y_true,
         y_pred,

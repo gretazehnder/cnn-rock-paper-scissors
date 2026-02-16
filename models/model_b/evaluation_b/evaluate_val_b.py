@@ -21,8 +21,8 @@ from preprocessing.data_pipeline import get_datasets
 
 #paths
 
-#getting project root 
-BASE_DIR = Path(__file__).resolve().parents[3]
+#project root directory
+BASE_DIR = PROJECT_ROOT
 
 #paths to model and evaluation folder
 MODEL_DIR = BASE_DIR / "models" / "model_b"
@@ -61,18 +61,18 @@ def plot_history_from_json(history_path: Path, out_dir: Path): #plotting trainin
     plt.savefig(out_dir / "loss_b.png") 
 
 def collect_predictions(model, dataset):
-    # lists to store true labels, predicted labels and images
+    #lists to store true labels, predicted labels and images
     y_true = []
     y_pred = []
     x_images = []
 
-    # loop over the dataset batch by batch
+    #looping over the dataset batch by batch
     for images, labels in dataset:
 
-        # model predictions for the batch
+        #model predictions for the batch
         predictions = model.predict(images, verbose=0)
 
-        # loop over images inside the batch
+        #looping over images inside the batch
         for i in range(len(labels)):
             y_true.append(int(labels[i]))                 # true label
             y_pred.append(int(np.argmax(predictions[i]))) # predicted label

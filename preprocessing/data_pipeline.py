@@ -2,15 +2,15 @@ from pathlib import Path
 import tensorflow as tf
 
 
-# defining configuration values
+#defining configuration values
 IMAGE_SIZE = (160, 160)
 BATCH_SIZE = 32
 SEED = 42
 
-# defining a fixed class order to keep label ids consistent everywhere
+#defining a fixed class order to keep label ids consistent everywhere
 CLASS_NAMES = ["paper", "rock", "scissors"]
 
-# defining project paths
+#defining project paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 SPLITS_DIR = BASE_DIR / "dataset_splits"
 
@@ -19,21 +19,21 @@ VAL_DIR = SPLITS_DIR / "val"
 TEST_DIR = SPLITS_DIR / "test"
 
 def get_datasets():
-    # loading the training dataset from directory
+    #loading the training dataset from directory
     train_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=TRAIN_DIR,
-        labels="inferred", #default/could omit
-        label_mode="int",  #default but better to keep
-        class_names= CLASS_NAMES, #default/could omit
-        color_mode="rgb", #default/could omit
+        labels="inferred", #default
+        label_mode="int",  #default
+        class_names= CLASS_NAMES, #default
+        color_mode="rgb", #default
         batch_size=BATCH_SIZE, #default but better to keep
         image_size=IMAGE_SIZE,
         shuffle=True, #default
         seed=SEED,
-        verbose=True, #default/could omit
+        verbose=True, #default
     )
 
-    # loading the validation dataset from directory
+    #loading the validation dataset from directory
     val_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=VAL_DIR,
         labels="inferred",
@@ -46,7 +46,7 @@ def get_datasets():
         verbose=True,
     )
 
-    # loading the test dataset from directory
+    #loading the test dataset from directory
     test_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=TEST_DIR,
         labels="inferred",
@@ -59,7 +59,7 @@ def get_datasets():
         verbose=True,
     )
 
-    # normalizing image pixel values to the range [0, 1]
+    #normalizing image pixel values to the range [0, 1]
     rescale = tf.keras.layers.Rescaling(scale=1./255)
 
     train_ds = train_ds.map(
@@ -75,14 +75,14 @@ def get_datasets():
         num_parallel_calls=tf.data.AUTOTUNE,
     )
 
-    # improving performance
+    #improving performance
     train_ds = train_ds.cache().prefetch(tf.data.AUTOTUNE)
     val_ds = val_ds.cache().prefetch(tf.data.AUTOTUNE)
     test_ds = test_ds.cache().prefetch(tf.data.AUTOTUNE)
 
     return train_ds, val_ds, test_ds
 
-# defining data augmentation to be applied only during training
+#defining data augmentation to be applied only during training
 def get_augmentation_layer():
     return tf.keras.Sequential(
         [

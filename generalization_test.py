@@ -22,7 +22,7 @@ CLASS_NAMES = ["paper", "rock", "scissors"]
 GEN_DIR = Path.home() / "OneDrive" / "Desktop" / "generalization_dataset"
 
 #model c path
-MODEL_PATH = Path("models/model_c/model_c.keras")# here model c was loaded, but it is possible to load any model by changing this path
+MODEL_PATH = Path("models/model_c/model_c.keras") #here model c was loaded, but it is possible to load any model by changing this path
 
 #data loading
 def load_generalization_ds(gen_dir: Path) -> tf.data.Dataset:
