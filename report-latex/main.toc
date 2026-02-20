@@ -22,7 +22,9 @@
 \contentsline {subsection}{\numberline {4.1}Training and validation curves}{10}{subsection.4.1}%
 \contentsline {subsection}{\numberline {4.2}Test set performance}{11}{subsection.4.2}%
 \contentsline {subsection}{\numberline {4.3}Error analysis and misclassified examples}{12}{subsection.4.3}%
-\contentsline {paragraph}{Model B.}{12}{section*.10}%
+\contentsline {paragraph}{Model A.}{12}{section*.10}%
 \contentsline {paragraph}{Model B.}{13}{section*.11}%
 \contentsline {paragraph}{Model C.}{13}{section*.12}%
 \contentsline {subsection}{\numberline {4.4}Discussion}{13}{subsection.4.4}%
+\contentsline {section}{\numberline {5} Generalization test}{13}{section.5}%
+\contentsline {section}{\numberline {6}Conclusion}{14}{section.6}%

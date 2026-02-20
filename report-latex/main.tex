@@ -206,10 +206,6 @@ Training is halted if no improvement is observed for three consecutive epochs, a
 The final instance of Model B is then retrained using the best hyperparameter configuration identified during tuning, using the Adam optimizer with the selected learning rate, and training dynamics are monitored through validation loss and classification accuracy.
 
 
-Model B extends the baseline architecture introduced in Model A with the objective of understanding and investigating the impact of selected architectural and optimization hyperparameters on model performance: rather than introducing a fundamentally different network design, this model adopts a controlled experimental approach in which model depth, feature extraction capacity, and learning rate are varied within a predefined search space.
-This approach enables a transparent comparison between configurations while preserving the overall convolutional structure of the baseline model.
-
-
 \subsection{Model C: random-search CNN}
 
 Model C represents the most flexible and regularized architecture within the experimental progression: in fact, while Models A and B relied on structured grid exploration, this last model adopts a stochastic hyperparameter optimization strategy based on random search.  
@@ -443,7 +439,7 @@ Error analysis is conducted exclusively on the held-out test set to ensure an un
     \label{fig:misclassified_examples}
 \end{figure}
 
-\paragraph{Model B.}
+\paragraph{Model A.}
 
 Figure~\ref{fig:misclassified_examples} (Model A) displays up to nine representative misclassified test samples. 
 As we have observed in the confusion matrix, Model A misclassifies seven instances of \textit{paper} and four instances of \textit{rock}, while all \textit{scissors} samples are correctly classified.
@@ -458,7 +454,7 @@ Although the overall number of errors is comparable to Model~A, their distributi
 Several misclassifications still involve the class \textit{paper}, which is often predicted as \textit{rock} and occasionally as \textit{scissors}, confirming that flat-hand configurations remain visually ambiguous under certain orientations. 
 In addition, two \textit{rock} samples are predicted as \textit{paper}, and one \textit{scissors} sample is also classified as \textit{paper}. 
 
-Compared to Model~A, the confusion appears more evenly distributed across classes rather than concentrated primarily on \textit{paper}. 
+Compared to Model A, the confusion appears more evenly distributed across classes rather than concentrated primarily on \textit{paper}. 
 
 \paragraph{Model C.}
 
@@ -470,13 +466,31 @@ These observations further confirm that, as the qualitative inspection of the er
 
 
 \subsection{Discussion}
+While Model C achieves the highest generalization performance, these improvements come at the cost of an increased computational complexity, as deeper architectures, stochastic hyperparameter search, and adaptive learning-rate scheduling significantly raise training time and resource consumption compared to the baseline model. The addition of further convolutional blocks and regularization mechanisms increases both the number of trainable parameters and the overall optimization burden, making the model less suitable for constrained environments despite its superior accuracy.
 
-While Model C achieves the highest generalization performance, these improvements come at the cost of increased computational complexity, as deeper architectures, random hyperparameter search, and adaptive learning-rate scheduling significantly raise training time and resource consumption compared to the baseline model. In particular, the introduction of additional convolutional blocks, Batch Normalization, and multiple regularization mechanisms increases both the number of trainable parameters and the overall optimization overhead, making the model less suitable for constrained environments despite its superior accuracy.
+Although further gains might be obtained through broader hyperparameter exploration, more diverse data augmentation, or transfer learning from pre-trained backbones, such strategies were intentionally excluded to preserve a controlled experimental design and manageable computational cost. The results therefore underline a practical trade-off between architectural sophistication and efficiency, suggesting Model B as a balanced compromise under limited resources, while Model C remains preferable when maximizing predictive performance is the primary objective.
 
-Further performance gains could potentially be obtained through more extensive hyperparameter optimization, larger search spaces, data augmentation strategies of greater diversity, or transfer learning from pre-trained convolutional backbones; however, such approaches were not explored in this study in order to maintain a controlled experimental setup and reasonable computational cost. Therefore, the results highlight a practical trade-off between architectural sophistication and efficiency, suggesting that Model B may represent a balanced compromise when computational resources are limited, while Model C is preferable when maximum predictive performance is required.
+%----------------------------------------------------------
+%optional generalization test
+\section{ Generalization test}
 
+A final generalization test was conducted on a small external dataset composed of 15 images (5 per class), acquired under different conditions with respect to the training data.
 
+Both Model A and Model B completely failed to generalize, predicting the class \textit{paper} for all input images, regardless of the true label. This behavior indicates a strong bias toward a single class when exposed to out-of-distribution data.
 
+Model C showed a slightly more differentiated behavior. While all \textit{paper} samples were correctly classified, \textit{rock} and \textit{scissors} images were frequently misclassified, with a tendency to be predicted as \textit{paper}. Although Model C did not achieve satisfactory performance, it was the only model that did not collapse entirely to a single-class prediction.
+
+This experiment highlights a key limitation of the project: despite high in-distribution accuracy, the models remain highly sensitive to domain shifts. The results suggest that background characteristics and acquisition conditions may have significantly influenced the learned representations. Increasing dataset diversity and improving robustness to varying visual contexts would likely enhance real-world generalization performance.
+
+\section{Conclusion}
+
+This work explored the development of Convolutional Neural Networks through a progressive and structured modeling strategy, moving from a simple baseline architecture (Model A) to more refined configurations (Models B and C). While Model A demonstrated that a shallow network can effectively capture the core visual patterns of the dataset, subsequent models introduced controlled increases in depth, regularization, and hyperparameter optimization.
+
+The results show that architectural and optimization choices influence learning behavior and in-distribution performance, with Model C achieving the highest validation accuracy. However, performance improvements became progressively smaller as model complexity increased, revealing diminishing returns relative to computational cost.
+
+The external generalization test further highlighted a key limitation: despite strong in-distribution accuracy, all models remained sensitive to domain shifts. This confirms that high validation performance does not necessarily translate into robust real-world generalization.
+
+Overall, the study emphasizes the importance of systematic experimentation, balanced model design, and careful evaluation when developing CNN-based image classification systems.
 
 
 
