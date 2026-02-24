@@ -224,5 +224,8 @@ eda_images
 *.out
 *.synctex.gz
 *.blg
-
-main.pdf
+*.bbl
+*.toc
+report-latex/*.bbl
+report-latex/*.blg
+report-latex/*.toc
