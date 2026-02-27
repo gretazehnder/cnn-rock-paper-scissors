@@ -1,17 +1,29 @@
-# Rock–Paper–Scissors Image Classification with CNNs
+# Rock–Paper–Scissors image classification with CNNs
 
-## Project Overview
+## Project overview
 
 This project investigates the application of Convolutional Neural Networks (CNNs) to a multi-class image classification task based on the Rock–Paper–Scissors (RPS) dataset.
 
-The objective is to progressively design, train, and evaluate increasingly complex architectures in order to analyze:
-
-- the impact of architectural depth,
-- the role of hyperparameter tuning strategies,
-- the effect of regularization mechanisms,
-- and the trade-off between predictive performance and computational cost.
+The objective is to progressively design, train, and evaluate increasingly complex architectures in order to understand how depth, hyperparameter tuning, and regularization influence model performance, and how improvements in predictive accuracy relate to computational cost.
 
 Three models are developed and compared, following a structured experimental progression from a simple baseline to a deeper architecture optimized through stochastic search.
+
+### Model overview
+
+- **Model A**: 2-block baseline CNN (fixed training setup).  
+- **Model B**: grid-search tuning over depth, capacity, and learning rate (early stopping).  
+- **Model C**: deeper, regularized CNN optimized via random search and LR scheduling (best overall performance).
+
+The project emphasizes systematic experimentation, structured model comparison, and transparent evaluation across progressively refined CNN architectures.
+
+---
+## Dataset
+
+The original Rock–Paper–Scissors dataset is not included in this repository, and can be downloaded from Kaggle through the following link:
+
+   https://www.kaggle.com/datasets/drgfreeman/rockpaperscissors.
+
+The repository already includes the pre-generated train, validation, and test splits inside the `dataset_splits/` directory.
 
 ---
 ## 📁 Repository Structure
@@ -19,7 +31,6 @@ Three models are developed and compared, following a structured experimental pro
 ```text
 cnn-rock-paper-scissors/
 │
-├── dataset/
 ├── dataset_splits/
 │
 ├── models/
@@ -48,11 +59,9 @@ cnn-rock-paper-scissors/
 ├── report-latex/
 ├── data_exploration.ipynb
 ├── data_setup.py
-└── generalization_test.py
+├── generalization_test.py
+└── requirements.txt
 ```
-### `dataset/`
-Contains the original Rock–Paper–Scissors images organized by class.
-
 ### `dataset_splits/`
 Stores the train, validation, and test splits generated with a fixed random seed to ensure reproducibility.
 
@@ -67,8 +76,9 @@ Each model has its own folder (`model_a`, `model_b`, `model_c`) containing:
 - `train_val_x.py`: training script  
 - `test_x.py`: final test evaluation script  
 - `history_x.json`: saved training history  
-- `evaluation_x/`: evaluation artifacts, including:
-  - training and validation curves  
+- `evaluation_x/`: evaluation artifacts for training, validation and test, including:
+  - `evaluate_val_x.py`: evaluation script for training and validation sets 
+  - training and validation curves (accuracy and loss)
   - classification reports  
   - confusion matrices  
   - test metrics  
@@ -89,54 +99,20 @@ Utility script for dataset preparation and project setup.
 Script used to evaluate model robustness on a small external dataset under domain shift.
 
 ---
+## Requirements
 
-##  Model Overview
+- Python >= 3.9
+- tensorflow==2.20.0
+- numpy==1.26.4
+- matplotlib==3.9.2
+- scikit-learn==1.7.2
+- Pillow==10.4.0
 
-###  Model A — Baseline CNN
+Install dependencies with:
 
-A shallow convolutional architecture designed as a reference model.
-
-- Two convolutional blocks  
-- Standard ReLU activations and max pooling  
-- Single dense classification head  
-- Fixed training configuration  
-
-Provides stable convergence and strong baseline performance.
-
+```bash
+pip install -r requirements.txt
+```
 ---
 
-###  Model B — Tuned CNN (Grid Search)
 
-Extends the baseline architecture by introducing controlled hyperparameter tuning.
-
-- Variable number of convolutional blocks  
-- Variable base number of filters  
-- Learning rate selection via grid search  
-- Early stopping for regularization  
-
-Designed to evaluate how moderate increases in depth and capacity affect performance.
-
----
-
-###  Model C — Random-Search CNN
-
-The most flexible and regularized architecture in the project.
-
-Introduces:
-
-- Deeper convolutional backbone  
-- Batch Normalization  
-- SpatialDropout2D  
-- Dropout in the classification head  
-- Optional L2 regularization  
-- He normal initialization  
-- Log-uniform learning rate sampling  
-- ReduceLROnPlateau scheduling  
-
-Hyperparameters are selected through random search across a mixed discrete–continuous space.
-
-This model achieves the highest predictive performance while increasing computational complexity.
-
----
-
-The project emphasizes systematic experimentation, structured model comparison, and transparent evaluation across progressively refined CNN architectures.
