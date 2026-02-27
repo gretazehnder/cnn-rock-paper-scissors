@@ -11,19 +11,13 @@ from sklearn.metrics import confusion_matrix, classification_report, ConfusionMa
 
 import sys
 
-#adding project root to python path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 sys.path.append(str(PROJECT_ROOT))
 
-from preprocessing.data_pipeline import get_datasets
+from preprocessing.data_pipeline import get_datasets, CLASS_NAMES
 
 
-#paths
-
-#project root directory
-BASE_DIR = PROJECT_ROOT
-
-MODEL_DIR = BASE_DIR / "models" / "model_a"
+MODEL_DIR = PROJECT_ROOT / "models" / "model_a"
 EVAL_DIR = MODEL_DIR / "evaluation_a"
 
 MODEL_PATH = MODEL_DIR / "model_a.keras"
@@ -31,6 +25,7 @@ MODEL_PATH = MODEL_DIR / "model_a.keras"
 
 #utility functions
 def collect_predictions(model, dataset):
+    """Collect true labels, predicted labels, and input images from the dataset"""
     y_true = []
     y_pred = []
     x_images = []
@@ -47,6 +42,7 @@ def collect_predictions(model, dataset):
 
 
 def save_confusion_matrix(y_true, y_pred, class_names, out_path, title="Confusion matrix - TEST"):
+    """Save confusion matrix plot"""
     cm = confusion_matrix(y_true, y_pred)
     disp = ConfusionMatrixDisplay(cm, display_labels=class_names)
 
@@ -56,8 +52,8 @@ def save_confusion_matrix(y_true, y_pred, class_names, out_path, title="Confusio
     plt.savefig(out_path)
     plt.close()
 
-
 def save_misclassified_grid(x_images, y_true, y_pred, class_names, out_path, n=9):
+    """Save a grid of misclassified images"""
     mis_idx = np.where(y_true != y_pred)[0]
     if len(mis_idx) == 0:
         return
@@ -79,8 +75,8 @@ def save_misclassified_grid(x_images, y_true, y_pred, class_names, out_path, n=9
     plt.savefig(out_path)
     plt.close()
 
-
 def save_misclassified_csv(y_true, y_pred, class_names, out_path):
+    """Save all misclassified samples to csv"""
     mis_idx = np.where(y_true != y_pred)[0]
 
     with open(out_path, "w", newline="") as f:
@@ -94,33 +90,27 @@ def save_misclassified_csv(y_true, y_pred, class_names, out_path):
                 class_names[int(y_pred[idx])],
             ])
 
-
 def save_test_metrics_txt(test_loss, test_acc, out_path):
+    """Save test loss and accuracy to a text file"""
     with open(out_path, "w") as f:
         f.write(f"test_loss: {test_loss:.6f}\n")
         f.write(f"test_accuracy: {test_acc:.6f}\n")
 
-
+#main evaluation function
 def main():
     EVAL_DIR.mkdir(parents=True, exist_ok=True)
 
     tf.keras.utils.set_random_seed(42)
 
-    #loading model
     model = keras.models.load_model(MODEL_PATH)
 
-    #(safety) ensuring compiled for evaluate
     model.compile(
         optimizer="adam",
         loss=keras.losses.SparseCategoricalCrossentropy(from_logits=False),
         metrics=["accuracy"],
     )
 
-    #loading datasets (only test)
     _, _, test_ds = get_datasets()
-
-    #fixed class order (matching pipeline)
-    class_names = ["paper", "rock", "scissors"]
 
     #final evaluation on test set
     test_loss, test_acc = model.evaluate(test_ds, verbose=0)
@@ -128,23 +118,23 @@ def main():
 
     save_test_metrics_txt(test_loss, test_acc, EVAL_DIR / "metrics_test_a.txt")
 
-    #collecting predictions
+    #predictions and true labels
     y_true, y_pred, x_images = collect_predictions(model, test_ds)
 
     #confusion matrix
     save_confusion_matrix(
         y_true,
         y_pred,
-        class_names,
+        CLASS_NAMES,
         EVAL_DIR / "confusion_matrix_test_a.png",
         title="Confusion Matrix - TEST (Model A)",
     )
 
-    #classification report (printed and saved)
+    #classification report 
     report = classification_report(
         y_true,
         y_pred,
-        target_names=class_names,
+        target_names=CLASS_NAMES,
         digits=4,
     )
     print("\nClassification report (TEST):\n")
@@ -158,7 +148,7 @@ def main():
         x_images,
         y_true,
         y_pred,
-        class_names,
+        CLASS_NAMES,
         EVAL_DIR / "misclassified_test_a.png",
     )
 
@@ -166,7 +156,7 @@ def main():
     save_misclassified_csv(
         y_true,
         y_pred,
-        class_names,
+        CLASS_NAMES,
         EVAL_DIR / "misclassified_test_a.csv",
     )
 

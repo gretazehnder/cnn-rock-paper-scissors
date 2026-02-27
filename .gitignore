@@ -223,9 +223,6 @@ eda_images
 *.fls
 *.out
 *.synctex.gz
-*.blg
-*.bbl
-*.toc
 report-latex/*.bbl
 report-latex/*.blg
 report-latex/*.toc

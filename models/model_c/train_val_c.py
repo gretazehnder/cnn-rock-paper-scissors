@@ -12,13 +12,12 @@ sys.path.append(str(PROJECT_ROOT))
 
 from preprocessing.data_pipeline import get_datasets, get_augmentation_layer, IMAGE_SIZE
 
-BASE_DIR = PROJECT_ROOT
-OUT_DIR = BASE_DIR / "models" / "model_c"
+OUT_DIR = PROJECT_ROOT / "models" / "model_c"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 NUM_CLASSES = 3
 
-
+#function to save results in csv format
 def save_results_csv(path: Path, rows: list[dict]) -> None:
     if not rows:
         return
@@ -27,12 +26,12 @@ def save_results_csv(path: Path, rows: list[dict]) -> None:
         writer.writeheader()
         writer.writerows(rows)
 
-
+#function to sample learning rate from log-uniform distribution
 def sample_loguniform(rng: np.random.Generator, low: float, high: float) -> float:
     log_low, log_high = np.log10(low), np.log10(high)
     return float(10 ** rng.uniform(log_low, log_high))
 
-
+#function for model c (complex)
 def build_model_c(
     augmentation_layer,
     n_blocks: int,
@@ -89,7 +88,7 @@ def build_model_c(
     model = keras.Model(inputs=inputs, outputs=outputs, name="model_c_random_search")
     return model
 
-
+#random search configuration sampling function
 def sample_config(rng: np.random.Generator, lr_min: float, lr_max: float) -> dict:
     return {
         "n_blocks": int(rng.choice([3, 4])),
@@ -102,7 +101,7 @@ def sample_config(rng: np.random.Generator, lr_min: float, lr_max: float) -> dic
         "use_batchnorm": True,
     }
 
-
+#main function for training and validation of model c 
 def main():
     EPOCHS = 25
     EARLY_STOP_PATIENCE = 3
@@ -203,7 +202,6 @@ def main():
     keras.backend.clear_session()
     tf.keras.utils.set_random_seed(SEED)
 
-    #new augmentation instance for final model too
     aug = get_augmentation_layer()
 
     model = build_model_c(

@@ -13,13 +13,13 @@ sys.path.append(str(PROJECT_ROOT))
 
 from preprocessing.data_pipeline import get_datasets, get_augmentation_layer, IMAGE_SIZE
 
-BASE_DIR = PROJECT_ROOT
-OUT_DIR = BASE_DIR / "models" / "model_b"
+OUT_DIR = PROJECT_ROOT / "models" / "model_b"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 NUM_CLASSES = 3
 
 
+#function for model b (tuned)
 def build_model_b(
     augmentation_layer,
     n_blocks: int,
@@ -29,8 +29,11 @@ def build_model_b(
     model = keras.Sequential(name="model_b_tuned")
 
     model.add(layers.Input(shape=(*IMAGE_SIZE, 3), name="input_image"))
+    
+    #data augmentation 
     model.add(augmentation_layer)
-
+    
+    #convolutional backbone with variable number of blocks and filters
     filters = base_filters
     for _ in range(n_blocks):
         model.add(
@@ -41,12 +44,13 @@ def build_model_b(
                 activation="relu",
             )
         )
-        model.add(layers.MaxPooling2D(pool_size=(2, 2)))
-        filters *= 2
-
+        model.add(layers.MaxPooling2D(pool_size=(2, 2))) #max pooling to reduce spatial dimensions
+        filters *= 2 #doubling filters at each block to increase capacity 
     
+    #flattening 
     model.add(layers.Flatten())
-
+    
+    #dense
     model.add(layers.Dense(dense_units, activation="relu"))
     model.add(layers.Dense(NUM_CLASSES, activation="softmax", name="pred"))
 

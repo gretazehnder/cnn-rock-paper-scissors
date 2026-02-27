@@ -10,13 +10,17 @@ from sklearn.metrics import (
     ConfusionMatrixDisplay,
 )
 
+import sys
 
-#config
-IMAGE_SIZE = (160, 160)
-BATCH_SIZE = 32
+PROJECT_ROOT = Path(__file__).resolve().parent
+sys.path.append(str(PROJECT_ROOT))
 
-#same order
-CLASS_NAMES = ["paper", "rock", "scissors"]
+from preprocessing.data_pipeline import (
+    IMAGE_SIZE,
+    BATCH_SIZE,
+    CLASS_NAMES,
+)
+
 
 #external dataset
 GEN_DIR = Path.home() / "OneDrive" / "Desktop" / "generalization_dataset"
@@ -37,15 +41,13 @@ def load_generalization_ds(gen_dir: Path) -> tf.data.Dataset:
         class_names=CLASS_NAMES,
         image_size=IMAGE_SIZE,
         batch_size=BATCH_SIZE,
-        shuffle=False,  #to allineate y_true and pred
+        shuffle=False,  
         verbose=True,
     )
 
-    #same normalization
     rescale = tf.keras.layers.Rescaling(1.0 / 255)
     ds = ds.map(lambda x, y: (rescale(x), y), num_parallel_calls=tf.data.AUTOTUNE)
 
-    #performance
     ds = ds.cache().prefetch(tf.data.AUTOTUNE)
     return ds
 
@@ -65,7 +67,6 @@ def main():
     loss, acc = model.evaluate(gen_ds, verbose=1)
     print(f"\nGeneralization results -> loss: {loss:.4f} | accuracy: {acc:.4f}")
 
-    #predictions
     y_true = np.concatenate([y.numpy() for _, y in gen_ds])
     y_prob = model.predict(gen_ds, verbose=0)
     y_pred = np.argmax(y_prob, axis=1)

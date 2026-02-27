@@ -476,7 +476,7 @@ Although further gains might be obtained through broader hyperparameter explorat
 
 A final generalization test was conducted on a small external dataset composed of 15 images (5 per class), acquired under different conditions with respect to the training data.
 
-Both Model A and Model B completely failed to generalize, predicting the class \textit{paper} for all input images, regardless of the true label. This behavior indicates a strong bias toward a single class when exposed to out-of-distribution data.
+Both Model A and Model B exhibited poor generalization performance, predicting the class \textit{paper} for all input images, regardless of the true label. This behavior indicates a strong bias toward a single class when exposed to out-of-distribution data.
 
 Model C showed a slightly more differentiated behavior. While all \textit{paper} samples were correctly classified, \textit{rock} and \textit{scissors} images were frequently misclassified, with a tendency to be predicted as \textit{paper}. Although Model C did not achieve satisfactory performance, it was the only model that did not collapse entirely to a single-class prediction.
 

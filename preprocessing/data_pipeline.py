@@ -2,15 +2,14 @@ from pathlib import Path
 import tensorflow as tf
 
 
-#defining configuration values
+#configuration values
 IMAGE_SIZE = (160, 160)
 BATCH_SIZE = 32
 SEED = 42
 
-#defining a fixed class order to keep label ids consistent everywhere
 CLASS_NAMES = ["paper", "rock", "scissors"]
 
-#defining project paths
+#project paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 SPLITS_DIR = BASE_DIR / "dataset_splits"
 
@@ -19,21 +18,21 @@ VAL_DIR = SPLITS_DIR / "val"
 TEST_DIR = SPLITS_DIR / "test"
 
 def get_datasets():
-    #loading the training dataset from directory
+    #loading the training dataset
     train_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=TRAIN_DIR,
-        labels="inferred", #default
-        label_mode="int",  #default
-        class_names= CLASS_NAMES, #default
-        color_mode="rgb", #default
-        batch_size=BATCH_SIZE, #default but better to keep
+        labels="inferred",
+        label_mode="int", 
+        class_names=CLASS_NAMES, 
+        color_mode="rgb", 
+        batch_size=BATCH_SIZE, 
         image_size=IMAGE_SIZE,
-        shuffle=True, #default
+        shuffle=True, 
         seed=SEED,
-        verbose=True, #default
+        verbose=True, 
     )
 
-    #loading the validation dataset from directory
+    #loading the validation dataset
     val_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=VAL_DIR,
         labels="inferred",
@@ -46,7 +45,7 @@ def get_datasets():
         verbose=True,
     )
 
-    #loading the test dataset from directory
+    #loading the test dataset
     test_ds = tf.keras.preprocessing.image_dataset_from_directory(
         directory=TEST_DIR,
         labels="inferred",
@@ -75,7 +74,6 @@ def get_datasets():
         num_parallel_calls=tf.data.AUTOTUNE,
     )
 
-    #improving performance
     train_ds = train_ds.cache().prefetch(tf.data.AUTOTUNE)
     val_ds = val_ds.cache().prefetch(tf.data.AUTOTUNE)
     test_ds = test_ds.cache().prefetch(tf.data.AUTOTUNE)
